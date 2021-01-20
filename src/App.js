@@ -1,14 +1,9 @@
-import firebase from 'firebase/app';
-import firebaseConfig from './config/firebase';
+import Routes from './components/routes/Routes';
 
 const App = () => {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-
   return (
     <div>
-      <h1>Oii</h1>
+      <Routes />
     </div>
   );
 };

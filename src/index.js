@@ -1,10 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { Provider as ReduxProvider } from 'react-redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  createStore,
+} from '@reduxjs/toolkit';
+import authReducer from './store/reducers/auth';
+import ReduxThunk from 'redux-thunk';
+
+const reducer = combineReducers({
+  auth: authReducer,
+});
+
+const reduxStore = createStore(reducer, applyMiddleware(ReduxThunk));
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ReduxProvider store={reduxStore}>
+      <App />
+    </ReduxProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
