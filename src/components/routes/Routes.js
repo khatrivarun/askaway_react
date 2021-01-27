@@ -29,6 +29,14 @@ const Routes = () => {
       .catch((error) => console.log(error));
   };
 
+  const googleLogin = () => {
+    dispatch(AuthActions.googleSignUp())
+      .then((_) => {
+        console.log('user login');
+      })
+      .catch((error) => console.log(error));
+  };
+
   const logout = () => {
     dispatch(AuthActions.logout())
       .then((_) => {
@@ -55,6 +63,7 @@ const Routes = () => {
       </Switch>
       <h1>Oii</h1>
       <button onClick={() => login()}>Login</button>
+      <button onClick={() => googleLogin()}>Google Login</button>
       <button onClick={() => passwordReset()}>Password Reset</button>
       <Link to='/protected'>Protected</Link>
     </Router>
