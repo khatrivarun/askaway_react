@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import * as authActions from './../../store/actions/auth';
+import * as AuthActions from './../../store/actions/auth';
 import { Switch, BrowserRouter as Router, Link } from 'react-router-dom';
 import PrivateRoute from '../utility/PrivateRoute';
 import { auth } from './../../utils/Firebase';
@@ -9,25 +9,44 @@ const Routes = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // auth.signInWithEmailAndPassword('test@test.com', 'test123');
-
     return auth.onAuthStateChanged((user) => {
-      console.log(user);
       if (user) {
         const { uid } = user;
-        dispatch(authActions.autoLogin(uid));
+        dispatch(AuthActions.autoLogin(uid));
+      } else {
+        dispatch(AuthActions.logout());
       }
     });
   }, [dispatch]);
+
+  const login = () => {
+    dispatch(
+      AuthActions.emailAndPasswordLogin('varun.h.khatri@gmail.com', 'varun123')
+    )
+      .then((_) => {
+        console.log('user login');
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const logout = () => {
+    dispatch(AuthActions.logout())
+      .then((_) => {
+        console.log('user logout');
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <Router>
       <Switch>
         <PrivateRoute redirectTo='/' path='/protected'>
           <h1>Protected</h1>
+          <button onClick={() => logout()}>Logout</button>
         </PrivateRoute>
       </Switch>
       <h1>Oii</h1>
+      <button onClick={() => login()}>Login</button>
       <Link to='/protected'>Protected</Link>
     </Router>
   );
