@@ -1,4 +1,4 @@
-import { auth } from './../../utils/Firebase';
+import { auth, googleAuthProvider } from './../../utils/Firebase';
 
 export const SIGN_IN = 'SIGN IN';
 export const SIGN_OUT = 'SIGN OUT';
@@ -79,7 +79,8 @@ export const emailAndPasswordRegister = (email, password) => {
 };
 
 /**
- * Log a user into the application with Firebase.
+ * Log a user into the application with Firebase
+ * using email and password combination.
  * @param {string} email
  * @param {string} password
  */
@@ -133,6 +134,41 @@ export const passwordReset = (email) => {
       // If the email is in an incorrect format.
       if (error.code === 'auth/invalid-email') {
         throw new Error('The email address you provided is invalid.');
+      }
+    }
+  };
+};
+
+/**
+ * Log a user into the application with Firebase
+ * using Google account.
+ */
+export const googleSignUp = () => {
+  return async (dispatch) => {
+    try {
+      // Select account to login from.
+      googleAuthProvider.setCustomParameters({ prompt: 'select_account' });
+
+      // Get the result of the login which contains the logged in user.
+      const result = await auth.signInWithPopup(googleAuthProvider);
+
+      // Get the user object from the result.
+      const user = result.user;
+
+      // TODO: FETCH THE USER DOCUMENT FROM FIRESTORE.
+
+      // Update Redux State.
+      dispatch({
+        type: SIGN_IN,
+        payload: {
+          uid: user.uid,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        throw new Error(
+          'auth/account-exists-with-different-credential is not implemented yet'
+        );
       }
     }
   };
