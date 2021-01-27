@@ -114,3 +114,26 @@ export const emailAndPasswordLogin = (email, password) => {
     }
   };
 };
+
+/**
+ * Send an email for password reset.
+ * @param {string} email
+ */
+export const passwordReset = (email) => {
+  return async () => {
+    try {
+      // Send password reset mail.
+      await auth.sendPasswordResetEmail(email);
+    } catch (error) {
+      // If the email does not belong to any user.
+      if (error.code === 'auth/user-not-found') {
+        throw new Error('This email is not registered to any account.');
+      }
+
+      // If the email is in an incorrect format.
+      if (error.code === 'auth/invalid-email') {
+        throw new Error('The email address you provided is invalid.');
+      }
+    }
+  };
+};

@@ -21,7 +21,7 @@ const Routes = () => {
 
   const login = () => {
     dispatch(
-      AuthActions.emailAndPasswordLogin('varun.h.khatri@gmail.com', 'varun123')
+      AuthActions.emailAndPasswordLogin('varun.h.khatri@gmail.com', 'varun1234')
     )
       .then((_) => {
         console.log('user login');
@@ -37,6 +37,14 @@ const Routes = () => {
       .catch((error) => console.log(error));
   };
 
+  const passwordReset = () => {
+    dispatch(AuthActions.passwordReset('varun.h.khatri@gmail.com'))
+      .then((_) => {
+        console.log('user password reset');
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <Router>
       <Switch>
@@ -47,6 +55,7 @@ const Routes = () => {
       </Switch>
       <h1>Oii</h1>
       <button onClick={() => login()}>Login</button>
+      <button onClick={() => passwordReset()}>Password Reset</button>
       <Link to='/protected'>Protected</Link>
     </Router>
   );
