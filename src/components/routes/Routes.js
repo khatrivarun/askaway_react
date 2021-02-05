@@ -69,12 +69,21 @@ const Routes = () => {
       .catch((error) => console.log(error));
   };
 
+  const passwordChange = () => {
+    dispatch(AuthActions.changePassword('varun1234', 'necronizer__1234'))
+      .then((_) => {
+        console.log('user password change');
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <Router>
       <Switch>
         <PrivateRoute redirectTo='/' path='/protected'>
           <h1>Protected</h1>
           <button onClick={() => logout()}>Logout</button>
+          <button onClick={() => passwordChange()}>Change Password</button>
         </PrivateRoute>
       </Switch>
       <h1>Oii</h1>

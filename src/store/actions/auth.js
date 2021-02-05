@@ -1,4 +1,9 @@
-import { auth, googleAuthProvider, firestoreDb } from './../../utils/Firebase';
+import {
+  auth,
+  googleAuthProvider,
+  emailAuthProvider,
+  firestoreDb,
+} from './../../utils/Firebase';
 import { User } from './../../models/user';
 
 export const SIGN_IN = 'SIGN IN';
@@ -225,8 +230,33 @@ export const googleSignUp = () => {
 };
 
 /**
+ * Changing the password of the logged in user
+ * @param {string} oldPassword
+ * @param {string} newPassword
+ */
+export const changePassword = (oldPassword, newPassword) => {
+  return async (dispatch) => {
+    try {
+      const currentUser = auth.currentUser;
+
+      const credential = emailAuthProvider.credential(
+        currentUser.email,
+        oldPassword
+      );
+
+      await currentUser.reauthenticateWithCredential(credential);
+      await currentUser.updatePassword(newPassword);
+    } catch (error) {
+      if (error.code === 'auth/weak-password') {
+        throw new Error('Password provided is weak.');
+      }
+    }
+  };
+};
+
+/**
  * Chdcking for user data existence in firebase
- * @param {*} userId User ID from firebase auth
+ * @param {string} userId User ID from firebase auth
  */
 const checkForAccountExistence = async (userId) => {
   const userDocument = userDb.doc(userId);
