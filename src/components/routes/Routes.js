@@ -21,10 +21,26 @@ const Routes = () => {
 
   const login = () => {
     dispatch(
-      AuthActions.emailAndPasswordLogin('varun.h.khatri@gmail.com', 'varun1234')
+      AuthActions.emailAndPasswordLogin(
+        'varunn.h.khatri@gmail.com',
+        'varun1234'
+      )
     )
       .then((_) => {
         console.log('user login');
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const register = () => {
+    dispatch(
+      AuthActions.emailAndPasswordRegister(
+        'varunn.h.khatri@gmail.com',
+        'varun1234'
+      )
+    )
+      .then((_) => {
+        console.log('user register');
       })
       .catch((error) => console.log(error));
   };
@@ -62,6 +78,7 @@ const Routes = () => {
         </PrivateRoute>
       </Switch>
       <h1>Oii</h1>
+      <button onClick={() => register()}>Register</button>
       <button onClick={() => login()}>Login</button>
       <button onClick={() => googleLogin()}>Google Login</button>
       <button onClick={() => passwordReset()}>Password Reset</button>
