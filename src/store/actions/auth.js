@@ -12,7 +12,6 @@ export const SIGN_OUT = 'SIGN OUT';
 const userDb = firestoreDb.collection('users');
 
 /**
- * [NOT COMPLETED]
  * Fires whenever there is a change in the auth
  * state listener provided by firebase.
  * @param {string} uid
@@ -246,6 +245,31 @@ export const changePassword = (oldPassword, newPassword) => {
 
       await currentUser.reauthenticateWithCredential(credential);
       await currentUser.updatePassword(newPassword);
+    } catch (error) {
+      if (error.code === 'auth/weak-password') {
+        throw new Error('Password provided is weak.');
+      }
+    }
+  };
+};
+
+/**
+ *
+ * @param {string} password
+ * @param {string} newEmail
+ */
+export const changeEmail = (password, newEmail) => {
+  return async (dispatch) => {
+    try {
+      const currentUser = auth.currentUser;
+
+      const credential = emailAuthProvider.credential(
+        currentUser.email,
+        password
+      );
+
+      await currentUser.reauthenticateWithCredential(credential);
+      await currentUser.updateEmail(newEmail);
     } catch (error) {
       if (error.code === 'auth/weak-password') {
         throw new Error('Password provided is weak.');
