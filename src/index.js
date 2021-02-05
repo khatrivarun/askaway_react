@@ -7,6 +7,7 @@ import {
   combineReducers,
   createStore,
 } from '@reduxjs/toolkit';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import authReducer from './store/reducers/auth';
 import ReduxThunk from 'redux-thunk';
 
@@ -14,7 +15,10 @@ const reducer = combineReducers({
   auth: authReducer,
 });
 
-const reduxStore = createStore(reducer, applyMiddleware(ReduxThunk));
+const reduxStore = createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(ReduxThunk))
+);
 
 ReactDOM.render(
   <React.StrictMode>

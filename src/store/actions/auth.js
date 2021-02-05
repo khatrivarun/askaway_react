@@ -1,7 +1,10 @@
-import { auth, googleAuthProvider } from './../../utils/Firebase';
+import { auth, googleAuthProvider, firestoreDb } from './../../utils/Firebase';
+import { User } from './../../models/user';
 
 export const SIGN_IN = 'SIGN IN';
 export const SIGN_OUT = 'SIGN OUT';
+
+const userDb = firestoreDb.collection('users');
 
 /**
  * [NOT COMPLETED]
@@ -11,11 +14,18 @@ export const SIGN_OUT = 'SIGN OUT';
  */
 export const autoLogin = (uid) => {
   return async (dispatch) => {
-    // TODO: GET USER DATA FROM FIRESTORE
+    const loggedInUser = new User();
+
+    // Getting firestore user record.
+    const firestoreDoc = userDb.doc(uid);
+    const userDoc = await firestoreDoc.get();
+
+    // Setup logged in user with data from firestore.
+    loggedInUser.fromJSON(userDoc.data());
     dispatch({
       type: SIGN_IN,
       payload: {
-        uid: uid,
+        user: loggedInUser,
       },
     });
   };
@@ -51,17 +61,29 @@ export const emailAndPasswordRegister = (email, password) => {
 
       // Get the user object from the result.
       const user = result.user;
+      const loggedInUser = new User();
+
+      // Setup logged in user with data for firestore.
+      loggedInUser.fromJSON({
+        displayName: 'New User',
+        emailAddress: user.email,
+        photoUrl: '',
+        userId: user.uid,
+        followers: [],
+        following: [],
+      });
+
+      // Saving user data to firestore
+      await userDb.doc(loggedInUser.userId).set(loggedInUser.toJSON());
 
       // Send them a verification mail to verify their mail address.
       await user.sendEmailVerification();
-
-      // TODO: SYNC USERS WITH FIRESTORE.
 
       // Update Redux State.
       dispatch({
         type: SIGN_IN,
         payload: {
-          uid: user.uid,
+          user: loggedInUser,
         },
       });
     } catch (error) {
@@ -92,14 +114,20 @@ export const emailAndPasswordLogin = (email, password) => {
 
       // Get the user object from the result.
       const user = result.user;
+      const loggedInUser = new User();
 
-      // TODO: FETCH THE USER DOCUMENT FROM FIRESTORE.
+      // Getting user data from firestore.
+      const firestoreDoc = userDb.doc(user.uid);
+      const userDoc = await firestoreDoc.get();
+
+      // Setup logged in user with data from firestore.
+      loggedInUser.fromJSON(userDoc.data());
 
       // Update Redux State.
       dispatch({
         type: SIGN_IN,
         payload: {
-          uid: user.uid,
+          user: loggedInUser,
         },
       });
     } catch (error) {
@@ -154,14 +182,36 @@ export const googleSignUp = () => {
 
       // Get the user object from the result.
       const user = result.user;
+      const loggedInUser = new User();
 
-      // TODO: FETCH THE USER DOCUMENT FROM FIRESTORE.
+      // Checking if its a new user or an existing user
+      if (await checkForAccountExistence(user.uid)) {
+        // Getting user data from firestore.
+        const firestoreDoc = userDb.doc(user.uid);
+        const userDoc = await firestoreDoc.get();
+
+        // Setup logged in user with data from firestore.
+        loggedInUser.fromJSON(userDoc.data());
+      } else {
+        // Setup logged in user with data for firestore.
+        loggedInUser.fromJSON({
+          displayName: user.displayName,
+          emailAddress: user.email,
+          photoUrl: user.photoURL,
+          userId: user.uid,
+          followers: [],
+          following: [],
+        });
+
+        // Saving user data to firestore
+        await userDb.doc(loggedInUser.userId).set(loggedInUser.toJSON());
+      }
 
       // Update Redux State.
       dispatch({
         type: SIGN_IN,
         payload: {
-          uid: user.uid,
+          user: loggedInUser,
         },
       });
     } catch (error) {
@@ -172,4 +222,20 @@ export const googleSignUp = () => {
       }
     }
   };
+};
+
+/**
+ * Chdcking for user data existence in firebase
+ * @param {*} userId User ID from firebase auth
+ */
+const checkForAccountExistence = async (userId) => {
+  const userDocument = userDb.doc(userId);
+
+  const userDoc = await userDocument.get();
+
+  if (userDoc.exists) {
+    return true;
+  } else {
+    return false;
+  }
 };
