@@ -299,6 +299,31 @@ export const changeEmail = (password, newEmail) => {
   };
 };
 
+export const deleteAccount = (password) => {
+  return async (dispatch) => {
+    try {
+      const currentUser = auth.currentUser;
+      const uid = currentUser.uid;
+
+      const credential = emailAuthProvider.credential(
+        currentUser.email,
+        password
+      );
+      await currentUser.reauthenticateWithCredential(credential);
+
+      await userDb.doc(uid).delete();
+      await currentUser.delete();
+
+      await auth.signOut();
+      dispatch({
+        type: SIGN_OUT,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+};
+
 /**
  * Chdcking for user data existence in firebase
  * @param {string} userId User ID from firebase auth

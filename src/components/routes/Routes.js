@@ -87,6 +87,14 @@ const Routes = () => {
       .catch((error) => console.log(error));
   };
 
+  const deleteAccount = () => {
+    dispatch(AuthActions.deleteAccount('necronizer__1234'))
+      .then((_) => {
+        console.log('user delete');
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <Router>
       <Switch>
@@ -95,6 +103,7 @@ const Routes = () => {
           <button onClick={() => logout()}>Logout</button>
           <button onClick={() => passwordChange()}>Change Password</button>
           <button onClick={() => emailChange()}>Change email</button>
+          <button onClick={() => deleteAccount()}>Delete Account</button>
         </PrivateRoute>
       </Switch>
       <h1>Oii</h1>
