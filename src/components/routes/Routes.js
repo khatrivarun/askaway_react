@@ -23,7 +23,7 @@ const Routes = () => {
     dispatch(
       AuthActions.emailAndPasswordLogin(
         'varunn.h.khatri@gmail.com',
-        'varun1234'
+        'necronizer__1234'
       )
     )
       .then((_) => {
@@ -36,7 +36,7 @@ const Routes = () => {
     dispatch(
       AuthActions.emailAndPasswordRegister(
         'varunn.h.khatri@gmail.com',
-        'varun1234'
+        'necronizer__1234'
       )
     )
       .then((_) => {
@@ -77,6 +77,16 @@ const Routes = () => {
       .catch((error) => console.log(error));
   };
 
+  const emailChange = () => {
+    dispatch(
+      AuthActions.changeEmail('necronizer__1234', 'varunn.h.khatri@gmail.com')
+    )
+      .then((_) => {
+        console.log('user email change');
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <Router>
       <Switch>
@@ -84,6 +94,7 @@ const Routes = () => {
           <h1>Protected</h1>
           <button onClick={() => logout()}>Logout</button>
           <button onClick={() => passwordChange()}>Change Password</button>
+          <button onClick={() => emailChange()}>Change email</button>
         </PrivateRoute>
       </Switch>
       <h1>Oii</h1>

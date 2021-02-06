@@ -270,9 +270,30 @@ export const changeEmail = (password, newEmail) => {
 
       await currentUser.reauthenticateWithCredential(credential);
       await currentUser.updateEmail(newEmail);
+
+      await userDb.doc(currentUser.uid).update({
+        emailAddress: newEmail,
+      });
+
+      const loggedInUser = new User();
+
+      // Getting firestore user record.
+      const firestoreDoc = userDb.doc(currentUser.uid);
+      const userDoc = await firestoreDoc.get();
+
+      // Setup logged in user with data from firestore.
+      loggedInUser.fromJSON(userDoc.data());
+      dispatch({
+        type: SIGN_IN,
+        payload: {
+          user: loggedInUser,
+        },
+      });
     } catch (error) {
-      if (error.code === 'auth/weak-password') {
-        throw new Error('Password provided is weak.');
+      if (error.code === 'auth/invalid-email') {
+        throw new Error('Email provided is in an invalid format');
+      } else if (error.code === 'auth/email-already-in-use') {
+        throw new Error('Email provided is already in use.');
       }
     }
   };
