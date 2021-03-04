@@ -10,6 +10,7 @@ import {
 import { composeWithDevTools } from 'redux-devtools-extension';
 import authReducer from './store/reducers/auth';
 import ReduxThunk from 'redux-thunk';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const reducer = combineReducers({
   auth: authReducer,
@@ -23,7 +24,9 @@ const reduxStore = createStore(
 ReactDOM.render(
   <React.StrictMode>
     <ReduxProvider store={reduxStore}>
-      <App />
+      <ChakraProvider>
+        <App />
+      </ChakraProvider>
     </ReduxProvider>
   </React.StrictMode>,
   document.getElementById('root')
