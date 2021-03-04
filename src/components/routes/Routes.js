@@ -27,6 +27,7 @@ const Routes = () => {
     <Router>
       <Switch>
         <PublicRoute exact path='/register' component={UserFormPage} />
+        <PublicRoute exact path='/login' component={UserFormPage} />
       </Switch>
     </Router>
   );
