@@ -3,8 +3,12 @@ import {
   googleAuthProvider,
   emailAuthProvider,
   firestoreDb,
+  firebaseStorage,
 } from './../utils/Firebase';
 import { User } from './../models/user';
+
+const userDb = firestoreDb.collection('users');
+const profilePictureStorage = firebaseStorage.child('/profile-pictures');
 
 export const getCurrentUser = () => {
   return auth.currentUser;
@@ -14,7 +18,7 @@ export const getUserFromFirebase = async (uid) => {
   const loggedInUser = new User();
 
   // Getting user data from firestore.
-  const firestoreDoc = firestoreDb.collection('users').doc(uid);
+  const firestoreDoc = userDb.doc(uid);
   const userDoc = await firestoreDoc.get();
 
   // Setup logged in user with data from firestore.
@@ -22,8 +26,6 @@ export const getUserFromFirebase = async (uid) => {
 
   return loggedInUser;
 };
-
-const userDb = firestoreDb.collection('users');
 
 /**
  * Fires whenever there is a change in the auth
@@ -247,6 +249,8 @@ export const changeEmail = async (password, newEmail) => {
       throw new Error('Email provided is in an invalid format');
     } else if (error.code === 'auth/email-already-in-use') {
       throw new Error('Email provided is already in use.');
+    } else if (error.code === 'auth/wrong-password') {
+      throw new Error('Incorrect password given');
     }
   }
 };
@@ -285,4 +289,33 @@ const checkForAccountExistence = async (userId) => {
   } else {
     return false;
   }
+};
+
+export const updateName = async (newName) => {
+  const user = auth.currentUser;
+
+  await user.updateProfile({
+    displayName: newName,
+  });
+
+  await userDb.doc(user.uid).update({
+    displayName: newName,
+  });
+};
+
+export const updateProfilePicture = async (file) => {
+  const user = getCurrentUser();
+  const uid = user.uid;
+
+  await profilePictureStorage.child(`${uid}.jpg`).put(file);
+
+  const url = await profilePictureStorage.child(`${uid}.jpg`).getDownloadURL();
+
+  await user.updateProfile({
+    photoURL: url,
+  });
+
+  await userDb.doc(uid).update({
+    photoUrl: url,
+  });
 };

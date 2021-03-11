@@ -7,9 +7,9 @@ const useFirebaseUser = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const user = AuthUtils.getCurrentUser();
+    const userAuth = AuthUtils.getCurrentUser();
 
-    AuthUtils.getUserFromFirebase(user.uid)
+    AuthUtils.getUserFromFirebase(userAuth.uid)
       .then((user) => {
         setUser(user);
         setLoading(false);
