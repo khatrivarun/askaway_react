@@ -24,6 +24,23 @@ const UserFormPage = () => {
   const location = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const onGoogleAuthPressed = async () => {
+    try {
+      onOpen();
+      await dispatch(AuthActions.googleSignUp());
+      onClose();
+    } catch (error) {
+      onClose();
+      toast({
+        title: 'Error occured!',
+        status: 'error',
+        description: error.message,
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
   const onSubmit = async (values) => {
     try {
       onOpen();
@@ -45,7 +62,7 @@ const UserFormPage = () => {
     } catch (error) {
       onClose();
       toast({
-        title: 'Error occured during registration!',
+        title: 'Error occured!',
         status: 'error',
         description: error.message,
         duration: 9000,
@@ -145,6 +162,17 @@ const UserFormPage = () => {
         >
           {location.pathname.startsWith('/register') ? 'Register' : 'Log in'}{' '}
           Away!
+        </Button>
+        <Button
+          m={5}
+          colorScheme='whiteAlpha'
+          textColor='black'
+          onClick={async () => await onGoogleAuthPressed()}
+          variant='outline'
+        >
+          {location.pathname.startsWith('/register')
+            ? 'Register with Google'
+            : 'Log in with Google'}
         </Button>
       </Box>
       <Modal isOpen={isOpen}>

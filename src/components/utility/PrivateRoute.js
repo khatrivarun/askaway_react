@@ -3,16 +3,11 @@ import { Redirect, Route } from 'react-router-dom';
 
 const PrivateRoute = (props) => {
   const authState = useSelector((state) => state.auth);
-  if (authState) {
-    if (authState.user) {
-      return (
-        <Route exact path={props.path}>
-          {props.children}
-        </Route>
-      );
-    } else {
-      return <Redirect to={props.redirectTo}></Redirect>;
-    }
+  console.log(authState.user);
+  if (authState.user) {
+    return <Route exact path={props.path} component={props.component} />;
+  } else {
+    return <Redirect to={props.redirectTo}></Redirect>;
   }
 };
 

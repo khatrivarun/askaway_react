@@ -8,6 +8,9 @@ import {
 } from 'react-router-dom';
 import { auth } from './../../utils/Firebase';
 import UserFormPage from '../../pages/UserForm';
+import QuestionsPage from '../../pages/Questions';
+import PrivateRoute from '../utility/PrivateRoute';
+import AccountEditPage from '../../pages/AccountEdit';
 
 const Routes = () => {
   const dispatch = useDispatch();
@@ -15,8 +18,7 @@ const Routes = () => {
   useEffect(() => {
     return auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const { uid } = user;
-        await dispatch(AuthActions.autoLogin(uid));
+        dispatch(AuthActions.autoLogin(user));
       } else {
         dispatch(AuthActions.logout());
       }
@@ -28,6 +30,12 @@ const Routes = () => {
       <Switch>
         <PublicRoute exact path='/register' component={UserFormPage} />
         <PublicRoute exact path='/login' component={UserFormPage} />
+        <PublicRoute exact path='/questions' component={QuestionsPage} />
+        <PrivateRoute
+          path='/account/edit'
+          component={AccountEditPage}
+          redirectTo='/login'
+        />
       </Switch>
     </Router>
   );

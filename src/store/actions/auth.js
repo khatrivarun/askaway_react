@@ -11,33 +11,17 @@ export const SIGN_OUT = 'SIGN OUT';
 
 const userDb = firestoreDb.collection('users');
 
-const sleep = (milliseconds) => {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-};
-
 /**
  * Fires whenever there is a change in the auth
  * state listener provided by firebase.
  * @param {string} uid
  */
-export const autoLogin = (uid) => {
-  return async (dispatch) => {
-    const loggedInUser = new User();
-
-    await sleep(3000);
-
-    // Getting firestore user record.
-    const firestoreDoc = userDb.doc(uid);
-    const userDoc = await firestoreDoc.get();
-
-    // Setup logged in user with data from firestore.
-    loggedInUser.fromJSON(userDoc.data());
-    dispatch({
-      type: SIGN_IN,
-      payload: {
-        user: loggedInUser,
-      },
-    });
+export const autoLogin = (user) => {
+  return {
+    type: SIGN_IN,
+    payload: {
+      user: user,
+    },
   };
 };
 
