@@ -1,10 +1,17 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
+import useFirebaseUser from '../hooks/useFirebaseUser';
+import LoadingPage from './Loading';
 
 const AccountEditPage = () => {
-  return (
-    <Flex h='100vh' align='center' justify='center' direction='column' m={30}>
-      oii
+  const { loading, user } = useFirebaseUser();
+  return !loading ? (
+    <Flex h='100vh' align='center' direction='column' m={30}>
+      {user.displayName}
     </Flex>
+  ) : (
+    <LoadingPage>
+      <Text>Fetching Your Details...</Text>
+    </LoadingPage>
   );
 };
 

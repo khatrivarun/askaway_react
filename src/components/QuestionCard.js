@@ -1,11 +1,10 @@
 import { Box, Text, Flex, Button } from '@chakra-ui/react';
 import { IoHeart, IoList } from 'react-icons/io5';
 
-const CardComponent = () => {
+const QuestionCardComponent = () => {
   return (
     <Box
-      w='lg'
-      maxW='lg'
+      w={{ base: 'sm', md: 'md', lg: 'lg', xl: 'xl' }}
       borderWidth='1px'
       borderRadius='lg'
       overflow='hidden'
@@ -36,4 +35,4 @@ const CardComponent = () => {
   );
 };
 
-export default CardComponent;
+export default QuestionCardComponent;

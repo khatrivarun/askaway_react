@@ -9,7 +9,7 @@ import { MdSearch } from 'react-icons/md';
 
 const SearchBarComponent = () => {
   return (
-    <Box w={500}>
+    <Box w={500} mx={10}>
       <InputGroup>
         <InputLeftElement
           pointerEvents='none'

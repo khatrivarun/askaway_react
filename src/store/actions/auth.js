@@ -14,7 +14,7 @@ const userDb = firestoreDb.collection('users');
 /**
  * Fires whenever there is a change in the auth
  * state listener provided by firebase.
- * @param {string} uid
+ * @param {string} user
  */
 export const autoLogin = (user) => {
   return {

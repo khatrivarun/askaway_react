@@ -13,22 +13,23 @@ import {
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import FormfieldComponent from '../components/Formfield';
-import * as AuthActions from '../store/actions/auth';
-import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import * as AuthUtils from '../utils/auth';
+import { useLocation, useHistory } from 'react-router-dom';
 import { LoadingAnimation } from '../components/utility/LottieAnimations';
+import { FcGoogle } from 'react-icons/fc';
 
 const UserFormPage = () => {
-  const dispatch = useDispatch();
   const toast = useToast();
   const location = useLocation();
+  const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onGoogleAuthPressed = async () => {
     try {
       onOpen();
-      await dispatch(AuthActions.googleSignUp());
+      await AuthUtils.googleSignUp();
       onClose();
+      history.push('/');
     } catch (error) {
       onClose();
       toast({
@@ -45,18 +46,16 @@ const UserFormPage = () => {
     try {
       onOpen();
       if (location.pathname.startsWith('/register')) {
-        await dispatch(
-          AuthActions.emailAndPasswordRegister(
-            values.email,
-            values.password,
-            values.firstName,
-            values.lastName
-          )
+        await AuthUtils.emailAndPasswordRegister(
+          values.email,
+          values.password,
+          values.firstName,
+          values.lastName
         );
+        history.push('/login');
       } else {
-        await dispatch(
-          AuthActions.emailAndPasswordLogin(values.email, values.password)
-        );
+        await AuthUtils.emailAndPasswordLogin(values.email, values.password);
+        history.push('/');
       }
       onClose();
     } catch (error) {
@@ -169,6 +168,7 @@ const UserFormPage = () => {
           textColor='black'
           onClick={async () => await onGoogleAuthPressed()}
           variant='outline'
+          leftIcon={<FcGoogle />}
         >
           {location.pathname.startsWith('/register')
             ? 'Register with Google'
@@ -179,7 +179,7 @@ const UserFormPage = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
-            <Flex align='center' justify='center' direction='column'>
+            <Flex align='center' justify='center' direction='column' m={30}>
               <LoadingAnimation />
               <Heading>
                 {location.pathname.startsWith('/register')

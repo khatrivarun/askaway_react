@@ -1,5 +1,6 @@
 import Lottie from 'react-lottie';
 import loadingAnimationData from './../../lottie/loading.json';
+import { Box } from '@chakra-ui/react';
 
 export const LoadingAnimation = () => {
   const defaultOptions = {
@@ -10,5 +11,9 @@ export const LoadingAnimation = () => {
       preserveAspectRatio: 'xMidYMid slice',
     },
   };
-  return <Lottie options={defaultOptions} height={400} width={400} />;
+  return (
+    <Box m={30}>
+      <Lottie options={defaultOptions} height={200} width={200} />
+    </Box>
+  );
 };
