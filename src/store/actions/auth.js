@@ -14,24 +14,14 @@ const userDb = firestoreDb.collection('users');
 /**
  * Fires whenever there is a change in the auth
  * state listener provided by firebase.
- * @param {string} uid
+ * @param {string} user
  */
-export const autoLogin = (uid) => {
-  return async (dispatch) => {
-    const loggedInUser = new User();
-
-    // Getting firestore user record.
-    const firestoreDoc = userDb.doc(uid);
-    const userDoc = await firestoreDoc.get();
-
-    // Setup logged in user with data from firestore.
-    loggedInUser.fromJSON(userDoc.data());
-    dispatch({
-      type: SIGN_IN,
-      payload: {
-        user: loggedInUser,
-      },
-    });
+export const autoLogin = (user) => {
+  return {
+    type: SIGN_IN,
+    payload: {
+      user: user,
+    },
   };
 };
 
@@ -57,7 +47,12 @@ export const logout = () => {
  * @param {string} email
  * @param {string} password
  */
-export const emailAndPasswordRegister = (email, password) => {
+export const emailAndPasswordRegister = (
+  email,
+  password,
+  firstName,
+  lastName
+) => {
   return async (dispatch) => {
     try {
       // Create a new user record in FirebaseAuth with the given credentials.
@@ -65,11 +60,16 @@ export const emailAndPasswordRegister = (email, password) => {
 
       // Get the user object from the result.
       const user = result.user;
+
+      await user.updateProfile({
+        displayName: `${firstName} ${lastName}`,
+      });
+
       const loggedInUser = new User();
 
       // Setup logged in user with data for firestore.
       loggedInUser.fromJSON({
-        displayName: 'New User',
+        displayName: `${firstName} ${lastName}`,
         emailAddress: user.email,
         photoUrl: '',
         userId: user.uid,

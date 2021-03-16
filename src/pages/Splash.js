@@ -1,9 +1,9 @@
-import { Redirect, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { auth } from '../../utils/Firebase';
-import LoadingPage from '../../pages/Loading';
+import { auth } from './../utils/Firebase';
+import LoadingPage from './Loading';
+import { Redirect } from 'react-router-dom';
 
-const PrivateRoute = (props) => {
+const SplashPage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -17,10 +17,10 @@ const PrivateRoute = (props) => {
   return loading ? (
     <LoadingPage />
   ) : user ? (
-    <Route {...props} />
+    <Redirect to='/questions' />
   ) : (
     <Redirect to='/login' />
   );
 };
 
-export default PrivateRoute;
+export default SplashPage;
