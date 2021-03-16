@@ -59,9 +59,9 @@ const ChangePasswordTabComponent = () => {
   });
   return (
     <>
-      <Box mx={50}>
+      <Box mx={25}>
         <Heading color='teal'>Change your password</Heading>
-        <Box mx={50}>
+        <Box mx={25}>
           <FormfieldComponent
             type='password'
             error={formik.errors.oldPassword}

@@ -55,9 +55,9 @@ const ChangeEmailTabComponent = ({ user }) => {
 
   return (
     <>
-      <Box mx={50}>
+      <Box mx={25}>
         <Heading color='teal'>Change your email address</Heading>
-        <Box mx={50}>
+        <Box mx={25}>
           <FormfieldComponent
             type='email'
             error={formik.errors.email}

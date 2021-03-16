@@ -57,9 +57,9 @@ const AccountDetailsTabComponent = ({ user }) => {
 
   return (
     <>
-      <Box mx={50}>
+      <Flex mx={25} direction='column'>
         <Heading color='teal'>Update your profile</Heading>
-        <Box mx={50}>
+        <Box mx={25}>
           <ImageUploadComponent
             defaultImage={user.photoUrl}
             onUpload={imageUpload}
@@ -82,7 +82,7 @@ const AccountDetailsTabComponent = ({ user }) => {
         >
           Update Name
         </Button>
-      </Box>
+      </Flex>
       <Modal isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>

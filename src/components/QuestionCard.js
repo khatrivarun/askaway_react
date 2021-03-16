@@ -4,12 +4,12 @@ import { IoHeart, IoList } from 'react-icons/io5';
 const QuestionCardComponent = () => {
   return (
     <Box
-      w={{ base: 'sm', md: 'md', lg: 'lg', xl: 'xl' }}
+      w={{ base: 300, md: 'md', lg: 'lg', xl: 'xl' }}
       borderWidth='1px'
       borderRadius='lg'
       overflow='hidden'
       p={30}
-      m={5}
+      my={5}
     >
       <Text color='gray'>Username asks the following question</Text>
       <Text fontSize='2xl' fontWeight='bold'>

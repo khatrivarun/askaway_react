@@ -14,7 +14,12 @@ const ImageUploadComponent = ({ defaultImage, onUpload }) => {
   };
 
   return (
-    <Flex align='flex-end' p={5} justify='flex-start' direction='row'>
+    <Flex
+      align={{ base: 'center', lg: 'flex-end' }}
+      // p={5}
+      justify={{ base: 'center', lg: 'flex-start' }}
+      direction={{ base: 'column', lg: 'row' }}
+    >
       <Image
         src={imageUrl}
         borderRadius='full'

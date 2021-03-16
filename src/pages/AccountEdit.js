@@ -20,9 +20,9 @@ const AccountEditPage = () => {
     <Flex
       h='100vh'
       align='flex-start'
-      justify='center'
+      justify='flex-start'
       direction='column'
-      mx={50}
+      p={{ base: 0, lg: 50 }}
     >
       <Tabs variant='soft-rounded' h='80vh' colorScheme='teal'>
         <TabList>
@@ -31,7 +31,6 @@ const AccountEditPage = () => {
           <Tab>Change Your Password</Tab>
           <Tab>Delete Your Account</Tab>
         </TabList>
-
         <TabPanels>
           <TabPanel>
             <AccountDetailsTabComponent user={user} />

@@ -1,7 +1,8 @@
-import { IconButton, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { IconButton, Flex, useDisclosure } from '@chakra-ui/react';
 import { MdMenu } from 'react-icons/md';
 import DrawerComponent from './Drawer';
 import SearchBarComponent from './Searchbar';
+import UserDropdownComponent from './UserDropdown';
 
 const NavBarComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,7 +14,7 @@ const NavBarComponent = () => {
         bgColor='teal'
         borderWidth='1px'
         borderRadius='lg'
-        p={3}
+        p={{ base: 1, lg: 3 }}
       >
         <IconButton
           variant='ghost'
@@ -21,7 +22,7 @@ const NavBarComponent = () => {
           onClick={onOpen}
         />
         <SearchBarComponent />
-        <Text color='white'>Your Name Here</Text>
+        <UserDropdownComponent />
       </Flex>
       <DrawerComponent isOpen={isOpen} onClose={onClose} />
     </>
