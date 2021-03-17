@@ -9,9 +9,12 @@ import {
 } from '@chakra-ui/react';
 
 import { IoCaretDown } from 'react-icons/io5';
+import { useHistory } from 'react-router';
 import useFirebaseUser from '../hooks/useFirebaseUser';
 
 const UserDropdownComponent = () => {
+  const history = useHistory();
+
   const { loading, user } = useFirebaseUser();
   return !loading ? (
     <Menu>
@@ -25,7 +28,9 @@ const UserDropdownComponent = () => {
         <Text fontSize={{ base: 'xs', md: 'sm' }}>{user.displayName}</Text>
       </MenuButton>
       <MenuList>
-        <MenuItem>Add A Question</MenuItem>
+        <MenuItem onClick={() => history.push('/questions/new')}>
+          Add A Question
+        </MenuItem>
         <MenuItem>Update User Details</MenuItem>
         <MenuItem>View Your Profile</MenuItem>
       </MenuList>
