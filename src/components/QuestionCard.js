@@ -9,8 +9,14 @@ import {
   MenuList,
   MenuItem,
 } from '@chakra-ui/react';
-import { IoHeart, IoList, IoEllipsisVertical } from 'react-icons/io5';
+import {
+  IoHeart,
+  IoList,
+  IoEllipsisVertical,
+  IoHeartOutline,
+} from 'react-icons/io5';
 import * as AuthUtils from './../utils/auth';
+import * as QuestionUtils from './../utils/questions';
 
 const QuestionCardComponent = ({
   questionId,
@@ -24,6 +30,7 @@ const QuestionCardComponent = ({
   deleteQuestion,
 }) => {
   const currentUser = AuthUtils.getCurrentUser();
+
   return (
     <Box
       w={{ base: 300, md: 'md', lg: 'lg', xl: 'xl' }}
@@ -33,11 +40,15 @@ const QuestionCardComponent = ({
       p={30}
       my={5}
     >
-      <Text color='gray'>{user.displayName} asks the following question</Text>
-      <Flex justify='space-between'>
-        <Text fontSize='2xl' fontWeight='bold'>
-          {question}
-        </Text>
+      <Flex justify='space-between' align='flex-start'>
+        <Box>
+          <Text color='gray'>
+            {user.displayName} asks the following question
+          </Text>
+          <Text fontSize='2xl' fontWeight='bold'>
+            {question}
+          </Text>
+        </Box>
         {user.userId === currentUser.uid && (
           <Menu>
             <MenuButton
@@ -65,7 +76,20 @@ const QuestionCardComponent = ({
         <Button
           variant='ghost'
           colorScheme='teal'
-          leftIcon={<IoHeart color='teal' />}
+          leftIcon={
+            likes.indexOf(currentUser.uid) !== -1 ? (
+              <IoHeart color='teal' />
+            ) : (
+              <IoHeartOutline color='teal' />
+            )
+          }
+          onClick={async () => {
+            if (likes.indexOf(currentUser.uid) !== -1) {
+              QuestionUtils.unlikeQuestion(likes, questionId);
+            } else {
+              QuestionUtils.likeQuestion(likes, questionId);
+            }
+          }}
         >
           {likes.length} Noices
         </Button>

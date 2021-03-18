@@ -53,6 +53,7 @@ const QuestionsPage = () => {
         <Flex direction='column' m={50} align='center' justify='center'>
           {questions.map((question) => (
             <QuestionCardComponent
+              key={question.id}
               questionId={question.id}
               question={question.question}
               description={question.description}
@@ -64,9 +65,9 @@ const QuestionsPage = () => {
               deleteQuestion={deleteQuestion}
             />
           ))}
+          <FABComponent onClick={openQuestionForm} />
         </Flex>
       </Flex>
-      <FABComponent onClick={openQuestionForm} />
     </>
   ) : (
     <QuestionsFormPage

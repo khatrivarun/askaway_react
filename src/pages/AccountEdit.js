@@ -6,7 +6,10 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Button,
 } from '@chakra-ui/react';
+import { IoArrowBack } from 'react-icons/io5';
+import { useHistory } from 'react-router';
 import AccountDeleteTabComponent from '../components/AccountDeleteTab';
 import AccountDetailsTabComponent from '../components/AccountDetailsTab';
 import ChangeEmailTabComponent from '../components/ChangeEmailTab';
@@ -16,15 +19,25 @@ import LoadingPage from './Loading';
 
 const AccountEditPage = () => {
   const { loading, user } = useFirebaseUser();
+  const history = useHistory();
   return !loading ? (
     <Flex
       h='100vh'
       align='flex-start'
       justify='flex-start'
       direction='column'
-      p={{ base: 0, lg: 50 }}
+      p={{ base: 0, lg: 25 }}
     >
-      <Tabs variant='soft-rounded' h='80vh' colorScheme='teal'>
+      <Button
+        leftIcon={<IoArrowBack />}
+        colorScheme='white'
+        color='teal'
+        my={5}
+        onClick={() => history.goBack()}
+      >
+        Go back
+      </Button>
+      <Tabs variant='soft-rounded' colorScheme='teal'>
         <TabList>
           <Tab>Update User Profile</Tab>
           <Tab>Change Your Email</Tab>
