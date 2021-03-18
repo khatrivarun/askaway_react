@@ -14,7 +14,8 @@ const NavBarComponent = () => {
         bgColor='teal'
         borderWidth='1px'
         borderRadius='lg'
-        p={{ base: 1, lg: 3 }}
+        p={{ base: 0, lg: 3 }}
+        py={3}
       >
         <IconButton
           variant='ghost'

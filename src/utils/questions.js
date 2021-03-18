@@ -73,3 +73,20 @@ export const updateQuestion = async (
 export const deleteQuestion = async (id) => {
   await questionDb.doc(id).delete();
 };
+
+export const likeQuestion = async (likeList, questionId) => {
+  const user = getCurrentUser();
+
+  await questionDb.doc(questionId).update({
+    likes: [...likeList, user.uid],
+  });
+};
+
+export const unlikeQuestion = async (likeList, questionId) => {
+  const user = getCurrentUser();
+  const updatedLikeList = likeList.filter((like) => like !== user.uid);
+
+  await questionDb.doc(questionId).update({
+    likes: updatedLikeList,
+  });
+};

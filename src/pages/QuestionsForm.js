@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Heading,
-  CheckboxGroup,
   Checkbox,
   Wrap,
   IconButton,
@@ -11,6 +10,7 @@ import {
   FormControl,
   FormErrorMessage,
   Button,
+  useColorMode,
 } from '@chakra-ui/react';
 import { IoArrowBackSharp } from 'react-icons/io5';
 import { useFormik } from 'formik';
@@ -35,6 +35,7 @@ const QuestionsFormPage = ({
   const [isCategoriesValid, setCategoriesValid] = useState(false);
   const [categoriesErrorMessage, setCategoriesErrorMessage] = useState('');
   const history = useHistory();
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     if (questionCategories.length !== 0) {
@@ -97,7 +98,7 @@ const QuestionsFormPage = ({
             size='lg'
             icon={<IoArrowBackSharp />}
             colorScheme='white'
-            color='black'
+            color={colorMode === 'light' ? 'black' : 'white'}
             onClick={() => {
               if (fromLink) {
                 history.goBack();
