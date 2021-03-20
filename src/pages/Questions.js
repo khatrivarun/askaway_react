@@ -4,7 +4,7 @@ import QuestionCardComponent from '../components/QuestionCard';
 import NavBarComponent from '../components/NavBar';
 import FABComponent from '../components/FAB';
 import QuestionsFormPage from './QuestionsForm';
-import * as AuthUtils from './../utils/questions';
+import * as QuestionUtils from './../utils/questions';
 
 const QuestionsPage = () => {
   const [isQuestionFormOpen, setQuestionFormOpen] = useState(false);
@@ -16,9 +16,11 @@ const QuestionsPage = () => {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    return AuthUtils.questionStream().onSnapshot(
+    return QuestionUtils.questionStream().onSnapshot(
       async (querySnapshot) =>
-        setQuestions(await AuthUtils.convertToQuestionObject(querySnapshot)),
+        setQuestions(
+          await QuestionUtils.convertToQuestionObject(querySnapshot)
+        ),
       (error) => console.log(error)
     );
   }, []);
@@ -43,7 +45,7 @@ const QuestionsPage = () => {
   };
 
   const deleteQuestion = async (id) => {
-    await AuthUtils.deleteQuestion(id);
+    await QuestionUtils.deleteQuestion(id);
   };
 
   return !isQuestionFormOpen ? (

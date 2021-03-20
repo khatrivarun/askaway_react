@@ -3,10 +3,11 @@ import { getCurrentUser } from './auth';
 import { Question } from '../models/question';
 import categories from '../constants/categories';
 import * as AuthUtils from './auth';
+import * as AnswerUtils from './answers';
 
 const questionDb = firestoreDb.collection('questions');
 
-const convertKeytoCategories = (keys) => {
+export const convertKeytoCategories = (keys) => {
   const categoryWithTitle = keys.map((key) => {
     const category = categories.find((c) => c.key === key);
 
@@ -38,6 +39,21 @@ export const convertToQuestionObject = async (questions) => {
   );
 
   return questionObjects;
+};
+
+export const fetchQuestion = async (questionId) => {
+  const questionDoc = await questionDb.doc(questionId).get();
+  const questionData = questionDoc.data();
+  const question = new Question();
+
+  question.fromJson(questionData);
+  question.answers = await AnswerUtils.getAnswersForQuestion(question.answers);
+
+  return question;
+};
+
+export const fetchQuestionInRealTime = (questionId) => {
+  return questionDb.doc(questionId);
 };
 
 export const addQuestion = async (question, description, categories) => {
