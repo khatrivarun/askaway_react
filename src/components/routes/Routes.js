@@ -9,6 +9,8 @@ import PrivateRoute from '../utility/PrivateRoute';
 import AccountEditPage from '../../pages/AccountEdit';
 import SplashPage from '../../pages/Splash';
 import QuestionsFormPage from '../../pages/QuestionsForm';
+import QuestionPage from '../../pages/Question';
+import QuestionEditFormWrapperPage from '../../pages/QuestionEditFormWrapper';
 
 const Routes = () => {
   return (
@@ -23,6 +25,18 @@ const Routes = () => {
           exact
           path='/questions/new'
           component={() => <QuestionsFormPage fromLink={true} />}
+        />
+        <PrivateRoute
+          exact
+          path='/questions/:id'
+          render={(props) => <QuestionPage id={props.match.params.id} />}
+        />
+        <PrivateRoute
+          exact
+          path='/questions/:id/update'
+          render={(props) => (
+            <QuestionEditFormWrapperPage id={props.match.params.id} />
+          )}
         />
       </Switch>
     </Router>
