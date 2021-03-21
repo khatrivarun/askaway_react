@@ -73,7 +73,7 @@ const AnswerCardComponent = ({
               />
               <MenuList>
                 <MenuItem onClick={editAnswerModal}>Update Answer</MenuItem>
-                <MenuItem onClick={deleteAnswer}>Delete Answer</MenuItem>
+                <MenuItem onClick={deleteAnswerModal}>Delete Answer</MenuItem>
               </MenuList>
             </Menu>
           )}
