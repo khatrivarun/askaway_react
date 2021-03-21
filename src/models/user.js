@@ -29,8 +29,8 @@ export class User {
       emailAddress: this.emailAddress,
       photoUrl: this.photoUrl,
       userId: this.userId,
-      followers: this.followers.map((user) => user.toJSON()),
-      following: this.following.map((user) => user.toJSON()),
+      followers: this.followers,
+      following: this.following,
     };
   }
 
@@ -40,19 +40,7 @@ export class User {
       jsonData.emailAddress == null ? '' : jsonData.emailAddress;
     this.photoUrl = jsonData.photoUrl == null ? '' : jsonData.photoUrl;
     this.userId = jsonData.userId;
-    this.followers = jsonData.followers.map((user) => {
-      const loggedInUser = new User();
-
-      loggedInUser.fromJSON(user);
-
-      return loggedInUser;
-    });
-    this.following = jsonData.following.map((user) => {
-      const loggedInUser = new User();
-
-      loggedInUser.fromJSON(user);
-
-      return loggedInUser;
-    });
+    this.followers = jsonData.followers;
+    this.following = jsonData.following;
   }
 }

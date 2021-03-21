@@ -2,6 +2,7 @@ import { firestoreDb } from './Firebase';
 import { getCurrentUser } from './auth';
 import { Answer } from '../models/answer';
 import * as AuthUtils from './auth';
+import * as ContributorFields from './contributorsFields';
 import uuid from 'react-uuid';
 
 const questionDb = firestoreDb.collection('questions');
@@ -27,6 +28,7 @@ export const addAnswer = async (questionId, answer, answersList) => {
   await questionRef.update({
     answers: [...answersList, answerObject.toJson()],
   });
+  await AuthUtils.incrementCount(ContributorFields.QUESTIONS_ANSWERED);
 };
 
 export const updateAnswer = async (

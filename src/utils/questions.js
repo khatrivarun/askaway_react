@@ -4,6 +4,7 @@ import { Question } from '../models/question';
 import categories from '../constants/categories';
 import * as AuthUtils from './auth';
 import * as AnswerUtils from './answers';
+import * as ContributorFields from './contributorsFields';
 
 const questionDb = firestoreDb.collection('questions');
 
@@ -71,6 +72,7 @@ export const addQuestion = async (question, description, categories) => {
   );
 
   await questionDb.doc(docId).set(questionDoc.toJson());
+  await AuthUtils.incrementCount(ContributorFields.QUESTIONS_ASKED);
 };
 
 export const updateQuestion = async (
