@@ -16,6 +16,7 @@ const QuestionListComponent = ({
           questionId={question.id}
           question={question.question}
           description={question.description}
+          selectedAnswerId={question.selectedAnswerId}
           user={question.byUser}
           likes={question.likes}
           answers={question.answers}
