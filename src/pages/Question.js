@@ -66,7 +66,7 @@ const QuestionPage = ({ id }) => {
   ) : !_404 ? (
     <Flex direction='column' m={5}>
       <NavBarComponent />
-      <Flex direction='column' m={50} align='center' justify='center'>
+      <Flex direction='column' align='center' justify='center'>
         <QuestionCardComponent
           key={question.id}
           questionId={question.id}

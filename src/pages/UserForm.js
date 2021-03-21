@@ -164,7 +164,7 @@ const UserFormPage = () => {
         </Button>
         <Button
           m={5}
-          colorScheme='whiteAlpha'
+          bgColor='white'
           textColor='black'
           onClick={async () => await onGoogleAuthPressed()}
           variant='outline'
