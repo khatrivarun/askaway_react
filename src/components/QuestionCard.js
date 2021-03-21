@@ -36,6 +36,7 @@ const QuestionCardComponent = ({
   editQuestion,
   deleteQuestion,
   displayFull = false,
+  userProfileMode = false,
 }) => {
   const currentUser = AuthUtils.getCurrentUser();
   const { colorMode } = useColorMode();
@@ -82,7 +83,14 @@ const QuestionCardComponent = ({
               <MenuList>
                 <MenuItem
                   onClick={() => {
-                    editQuestion(question, description, questionId, categories);
+                    if (!userProfileMode)
+                      editQuestion(
+                        question,
+                        description,
+                        questionId,
+                        categories
+                      );
+                    else editQuestion(questionId);
                   }}
                 >
                   Update Question

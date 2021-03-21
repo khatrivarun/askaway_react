@@ -39,14 +39,16 @@ const UserDropdownComponent = () => {
         <MenuItem onClick={() => history.push('/account/edit')}>
           Update User Details
         </MenuItem>
-        <MenuItem>View Your Profile</MenuItem>
+        <MenuItem onClick={() => history.push('/account/me')}>
+          View Your Profile
+        </MenuItem>
         <MenuItem onClick={async () => await AuthUtils.logout()}>
           Log Out
         </MenuItem>
       </MenuList>
     </Menu>
   ) : (
-    <Spinner colorScheme='teal' />
+    <Spinner />
   );
 };
 
