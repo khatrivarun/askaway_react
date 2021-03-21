@@ -6,6 +6,9 @@ export class User {
   userId;
   followers;
   following;
+  answersPicked;
+  questionsAnswered;
+  questionsAsked;
 
   constructor(
     displayName,
@@ -13,7 +16,10 @@ export class User {
     photoUrl,
     userId,
     followers,
-    following
+    following,
+    answersPicked,
+    questionsAnswered,
+    questionsAsked
   ) {
     this.displayName = displayName == null ? '' : displayName;
     this.emailAddress = emailAddress == null ? '' : displayName;
@@ -21,6 +27,9 @@ export class User {
     this.userId = userId;
     this.followers = followers;
     this.following = following;
+    this.answersPicked = answersPicked;
+    this.questionsAnswered = questionsAnswered;
+    this.questionsAsked = questionsAsked;
   }
 
   toJSON() {
@@ -31,6 +40,9 @@ export class User {
       userId: this.userId,
       followers: this.followers,
       following: this.following,
+      answersPicked: this.answersPicked,
+      questionsAnswered: this.questionsAnswered,
+      questionsAsked: this.questionsAsked,
     };
   }
 
@@ -42,5 +54,8 @@ export class User {
     this.userId = jsonData.userId;
     this.followers = jsonData.followers;
     this.following = jsonData.following;
+    this.answersPicked = jsonData.answersPicked;
+    this.questionsAnswered = jsonData.questionsAnswered;
+    this.questionsAsked = jsonData.questionsAsked;
   }
 }

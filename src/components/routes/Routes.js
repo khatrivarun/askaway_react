@@ -11,6 +11,7 @@ import SplashPage from '../../pages/Splash';
 import QuestionsFormPage from '../../pages/QuestionsForm';
 import QuestionPage from '../../pages/Question';
 import QuestionEditFormWrapperPage from '../../pages/QuestionEditFormWrapper';
+import UserProfilePage from '../../pages/UserProfile';
 
 const Routes = () => {
   return (
@@ -37,6 +38,12 @@ const Routes = () => {
           render={(props) => (
             <QuestionEditFormWrapperPage id={props.match.params.id} />
           )}
+        />
+        <PrivateRoute exact path='/account/me' component={UserProfilePage} />
+        <PrivateRoute
+          exact
+          path='/account/:id'
+          render={(props) => <UserProfilePage uid={props.match.params.id} />}
         />
       </Switch>
     </Router>

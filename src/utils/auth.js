@@ -7,7 +7,7 @@ import {
   firebaseRef,
 } from './../utils/Firebase';
 import { User } from './../models/user';
-import * as ContributorFields from './contributorsFields';
+import * as ContributorFields from '../constants/contributorsFields';
 
 const userDb = firestoreDb.collection('users');
 const profilePictureStorage = firebaseStorage.child('/profile-pictures');
@@ -27,6 +27,13 @@ export const getUserFromFirebase = async (uid) => {
   loggedInUser.fromJSON(userDoc.data());
 
   return loggedInUser;
+};
+
+export const convertToUserObject = (user) => {
+  const userObject = new User();
+  userObject.fromJSON(user.data());
+
+  return userObject;
 };
 
 /**
@@ -72,6 +79,9 @@ export const emailAndPasswordRegister = async (
       userId: user.uid,
       followers: [],
       following: [],
+      answersPicked: 0,
+      questionsAnswered: 0,
+      questionsAsked: 0,
     });
 
     // Saving user data to firestore
@@ -180,6 +190,9 @@ export const googleSignUp = async () => {
         userId: user.uid,
         followers: [],
         following: [],
+        answersPicked: 0,
+        questionsAnswered: 0,
+        questionsAsked: 0,
       });
 
       // Saving user data to firestore
@@ -336,11 +349,23 @@ export const followUser = async (userUid) => {
   });
 };
 
-export const incrementCount = async (
-  fieldValue,
-  userId = getCurrentUser().uid
-) => {
-  const loggedInUserRef = userDb.doc(userId);
+export const unfollowUser = async (userUid) => {
+  const loggedInUser = getCurrentUser();
+  const loggedInUserRef = userDb.doc(loggedInUser.uid);
+  const toFollowUserRef = userDb.doc(userUid);
+
+  await loggedInUserRef.update({
+    following: firebaseRef.firestore.FieldValue.arrayRemove(userUid),
+  });
+
+  await toFollowUserRef.update({
+    followers: firebaseRef.firestore.FieldValue.arrayRemove(loggedInUser.uid),
+  });
+};
+
+export const incrementCount = async (fieldValue) => {
+  const loggedInUser = getCurrentUser();
+  const loggedInUserRef = userDb.doc(loggedInUser.uid);
 
   switch (fieldValue) {
     case ContributorFields.ANSWERS_PICKED: {
@@ -402,4 +427,16 @@ export const decrementCount = async (
       console.log('default');
     }
   }
+}
+
+export const fetchUserInRealTime = (uid) => {
+  return userDb.doc(uid);
+};
+
+export const fetchUsersFromFirebase = async (users) => {
+  const firebaseUsers = await Promise.all(
+    users.map(async (user) => await getUserFromFirebase(user))
+  );
+
+  return firebaseUsers;
 };

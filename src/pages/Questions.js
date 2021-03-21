@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Flex } from '@chakra-ui/react';
-import QuestionCardComponent from '../components/QuestionCard';
 import NavBarComponent from '../components/NavBar';
 import FABComponent from '../components/FAB';
 import QuestionsFormPage from './QuestionsForm';
 import * as QuestionUtils from './../utils/questions';
+import QuestionListComponent from '../components/QuestionList';
 
 const QuestionsPage = () => {
   const [isQuestionFormOpen, setQuestionFormOpen] = useState(false);
@@ -52,23 +52,13 @@ const QuestionsPage = () => {
     <>
       <Flex direction='column' m={5}>
         <NavBarComponent />
-        <Flex direction='column' m={50} align='center' justify='center'>
-          {questions.map((question) => (
-            <QuestionCardComponent
-              key={question.id}
-              questionId={question.id}
-              question={question.question}
-              description={question.description}
-              user={question.byUser}
-              likes={question.likes}
-              answers={question.answers}
-              categories={question.categories}
-              editQuestion={editQuestion}
-              deleteQuestion={deleteQuestion}
-            />
-          ))}
+        <QuestionListComponent
+          questions={questions}
+          editQuestion={editQuestion}
+          deleteQuestion={deleteQuestion}
+        >
           <FABComponent onClick={openQuestionForm} />
-        </Flex>
+        </QuestionListComponent>
       </Flex>
     </>
   ) : (

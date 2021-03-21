@@ -4,7 +4,7 @@ import { Question } from '../models/question';
 import categories from '../constants/categories';
 import * as AuthUtils from './auth';
 import * as AnswerUtils from './answers';
-import * as ContributorFields from './contributorsFields';
+import * as ContributorFields from '../constants/contributorsFields';
 
 const questionDb = firestoreDb.collection('questions');
 
@@ -124,4 +124,7 @@ export const unmarkAnswer = async (questionId, userId) => {
   });
 
   await AuthUtils.decrementCount(ContributorFields.ANSWERS_PICKED, userId);
+}
+export const fetchUsersQuestionsInRealTime = (uid) => {
+  return questionDb.where('byUser', '==', uid);
 };
