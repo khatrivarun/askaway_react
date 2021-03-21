@@ -24,6 +24,11 @@ const QuestionPage = ({ id }) => {
       if (question.exists) {
         const questionObject = new Question();
         questionObject.fromJson(question.data());
+
+        questionObject.categories = await QuestionUtils.convertKeytoCategories(
+          questionObject.categories
+        );
+
         questionObject.answers = await AnswerUtils.getAnswersForQuestion(
           questionObject.answers
         );
@@ -79,6 +84,7 @@ const QuestionPage = ({ id }) => {
           editQuestion={editQuestion}
           deleteQuestion={deleteQuestion}
           displayFull={true}
+          selectedAnswerId={question.selectedAnswerId}
         />
         <Flex direction='column'>
           <Heading>Your Answer</Heading>

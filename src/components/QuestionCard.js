@@ -14,6 +14,8 @@ import {
   ModalOverlay,
   ModalContent,
   ModalBody,
+  Wrap,
+  Tag,
 } from '@chakra-ui/react';
 import {
   IoHeart,
@@ -37,6 +39,7 @@ const QuestionCardComponent = ({
   deleteQuestion,
   displayFull = false,
   userProfileMode = false,
+  selectedAnswerId,
 }) => {
   const currentUser = AuthUtils.getCurrentUser();
   const { colorMode } = useColorMode();
@@ -100,6 +103,16 @@ const QuestionCardComponent = ({
             </Menu>
           )}
         </Flex>
+        <Wrap>
+          {categories.map((category) => (
+            <Tag key={category.key} m={1}>
+              {category.title}
+            </Tag>
+          ))}
+          <Tag m={1} colorScheme='teal'>
+            {selectedAnswerId !== '' ? 'Answered' : 'Unanswered'}
+          </Tag>
+        </Wrap>
         <Flex direction='row' justify='space-between'>
           <Button
             variant='ghost'
