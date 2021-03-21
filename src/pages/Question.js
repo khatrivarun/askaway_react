@@ -83,8 +83,8 @@ const QuestionPage = ({ id }) => {
         <Flex direction='column'>
           <Heading>Your Answer</Heading>
           <AnswerFormComponent addAnswer={addAnswer} />
-          <Heading>Answers</Heading>
           <AnswerListComponent
+            selectedAnswerId={question.selectedAnswerId}
             answers={question.answers}
             questionId={question.id}
             isOwnQuestion={question.byUser.userId === currentUser.uid}

@@ -68,7 +68,8 @@ export const addQuestion = async (question, description, categories) => {
     description,
     categories,
     [],
-    []
+    [],
+    ''
   );
 
   await questionDb.doc(docId).set(questionDoc.toJson());
@@ -109,6 +110,21 @@ export const unlikeQuestion = async (likeList, questionId) => {
   });
 };
 
+export const markAnswer = async (questionId, answerId, userId) => {
+  await questionDb.doc(questionId).update({
+    selectedAnswerId: answerId,
+  });
+
+  await AuthUtils.incrementCount(ContributorFields.ANSWERS_PICKED, userId);
+};
+
+export const unmarkAnswer = async (questionId, userId) => {
+  await questionDb.doc(questionId).update({
+    selectedAnswerId: '',
+  });
+
+  await AuthUtils.decrementCount(ContributorFields.ANSWERS_PICKED, userId);
+}
 export const fetchUsersQuestionsInRealTime = (uid) => {
   return questionDb.where('byUser', '==', uid);
 };
