@@ -336,9 +336,11 @@ export const followUser = async (userUid) => {
   });
 };
 
-export const incrementCount = async (fieldValue) => {
-  const loggedInUser = getCurrentUser();
-  const loggedInUserRef = userDb.doc(loggedInUser.uid);
+export const incrementCount = async (
+  fieldValue,
+  userId = getCurrentUser().uid
+) => {
+  const loggedInUserRef = userDb.doc(userId);
 
   switch (fieldValue) {
     case ContributorFields.ANSWERS_PICKED: {
@@ -358,6 +360,40 @@ export const incrementCount = async (fieldValue) => {
     case ContributorFields.QUESTIONS_ASKED: {
       await loggedInUserRef.update({
         questionsAsked: firebaseRef.firestore.FieldValue.increment(1),
+      });
+      break;
+    }
+
+    default: {
+      console.log('default');
+    }
+  }
+};
+
+export const decrementCount = async (
+  fieldValue,
+  userId = getCurrentUser().uid
+) => {
+  const loggedInUserRef = userDb.doc(userId);
+
+  switch (fieldValue) {
+    case ContributorFields.ANSWERS_PICKED: {
+      await loggedInUserRef.update({
+        answersPicked: firebaseRef.firestore.FieldValue.increment(-1),
+      });
+      break;
+    }
+
+    case ContributorFields.QUESTIONS_ANSWERED: {
+      await loggedInUserRef.update({
+        questionsAnswered: firebaseRef.firestore.FieldValue.increment(-1),
+      });
+      break;
+    }
+
+    case ContributorFields.QUESTIONS_ASKED: {
+      await loggedInUserRef.update({
+        questionsAsked: firebaseRef.firestore.FieldValue.increment(-1),
       });
       break;
     }

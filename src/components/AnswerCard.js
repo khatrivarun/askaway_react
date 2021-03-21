@@ -25,11 +25,14 @@ const AnswerCardComponent = ({
   user,
   answer,
   likes,
+  markedAnswer = false,
   updateAnswer,
   deleteAnswer,
   isOwnQuestion,
   likeAnswer,
   unlikeAnswer,
+  markAnswer,
+  unmarkAnswer,
 }) => {
   const [modalMode, setModalMode] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,7 +86,15 @@ const AnswerCardComponent = ({
                 colorScheme='white'
               />
               <MenuList>
-                <MenuItem>Mark As Answer</MenuItem>
+                <MenuItem
+                  onClick={async () =>
+                    !markedAnswer
+                      ? await markAnswer(id, user.userId)
+                      : await unmarkAnswer()
+                  }
+                >
+                  {!markedAnswer ? 'Mark As Answer' : 'Unmark this answer'}
+                </MenuItem>
               </MenuList>
             </Menu>
           )}
@@ -96,7 +107,15 @@ const AnswerCardComponent = ({
                 colorScheme='white'
               />
               <MenuList>
-                <MenuItem>Mark As Answer</MenuItem>
+                <MenuItem
+                  onClick={async () =>
+                    !markedAnswer
+                      ? await markAnswer(id, user.userId)
+                      : await unmarkAnswer()
+                  }
+                >
+                  {!markedAnswer ? 'Mark As Answer' : 'Unmark this answer'}
+                </MenuItem>
                 <MenuItem onClick={editAnswerModal}>Update Answer</MenuItem>
                 <MenuItem onClick={deleteAnswerModal}>Delete Answer</MenuItem>
               </MenuList>

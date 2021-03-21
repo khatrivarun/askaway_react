@@ -6,8 +6,18 @@ export class Question {
   categories;
   likes;
   answers;
+  selectedAnswerId;
 
-  constructor(id, byUser, question, description, categories, likes, answers) {
+  constructor(
+    id,
+    byUser,
+    question,
+    description,
+    categories,
+    likes,
+    answers,
+    selectedAnswerId
+  ) {
     this.id = id;
     this.byUser = byUser;
     this.question = question;
@@ -15,6 +25,7 @@ export class Question {
     this.categories = categories;
     this.likes = likes;
     this.answers = answers;
+    this.selectedAnswerId = selectedAnswerId;
   }
 
   fromJson(jsonData) {
@@ -25,6 +36,7 @@ export class Question {
     this.categories = jsonData.categories;
     this.likes = jsonData.likes;
     this.answers = jsonData.answers;
+    this.selectedAnswerId = jsonData.selectedAnswerId;
   }
 
   toJson() {
@@ -36,6 +48,7 @@ export class Question {
       categories: this.categories,
       likes: this.likes,
       answers: this.answers,
+      selectedAnswerId: this.selectedAnswerId,
     };
   }
 }
