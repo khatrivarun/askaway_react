@@ -4,6 +4,7 @@ import {
   emailAuthProvider,
   firestoreDb,
   firebaseStorage,
+  firebaseRef,
 } from './../utils/Firebase';
 import { User } from './../models/user';
 
@@ -317,5 +318,19 @@ export const updateProfilePicture = async (file) => {
 
   await userDb.doc(uid).update({
     photoUrl: url,
+  });
+};
+
+export const followUser = async (userUid) => {
+  const loggedInUser = getCurrentUser();
+  const loggedInUserRef = userDb.doc(loggedInUser.uid);
+  const toFollowUserRef = userDb.doc(userUid);
+
+  await loggedInUserRef.update({
+    following: firebaseRef.firestore.FieldValue.arrayUnion(userUid),
+  });
+
+  await toFollowUserRef.update({
+    followers: firebaseRef.firestore.FieldValue.arrayUnion(loggedInUser.uid),
   });
 };
