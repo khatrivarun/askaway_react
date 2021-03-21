@@ -2,7 +2,7 @@ import { firestoreDb } from './Firebase';
 import { getCurrentUser } from './auth';
 import { Answer } from '../models/answer';
 import * as AuthUtils from './auth';
-import * as ContributorFields from './contributorsFields';
+import * as ContributorFields from '../constants/contributorsFields';
 import uuid from 'react-uuid';
 
 const questionDb = firestoreDb.collection('questions');

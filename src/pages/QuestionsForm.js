@@ -31,7 +31,6 @@ const QuestionsFormPage = ({
   isOpen = true,
   onCloseForm,
 }) => {
-  console.log(questionCategories);
   const [categoryKeys, setCategoryKeys] = useState([]);
   const [isCategoriesValid, setCategoriesValid] = useState(false);
   const [categoriesErrorMessage, setCategoriesErrorMessage] = useState('');

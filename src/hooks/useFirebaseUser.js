@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import * as AuthUtils from './../utils/auth';
 
-const useFirebaseUser = () => {
+const useFirebaseUser = (uid = AuthUtils.getCurrentUser().uid) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const userAuth = AuthUtils.getCurrentUser();
-
-    AuthUtils.getUserFromFirebase(userAuth.uid)
+    AuthUtils.getUserFromFirebase(uid)
       .then((user) => {
         setUser(user);
         setLoading(false);
@@ -19,7 +17,7 @@ const useFirebaseUser = () => {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [uid]);
 
   return { loading, user, error };
 };
