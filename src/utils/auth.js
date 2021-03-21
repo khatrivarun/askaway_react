@@ -7,6 +7,7 @@ import {
   firebaseRef,
 } from './../utils/Firebase';
 import { User } from './../models/user';
+import * as ContributorFields from './contributorsFields';
 
 const userDb = firestoreDb.collection('users');
 const profilePictureStorage = firebaseStorage.child('/profile-pictures');
@@ -333,4 +334,36 @@ export const followUser = async (userUid) => {
   await toFollowUserRef.update({
     followers: firebaseRef.firestore.FieldValue.arrayUnion(loggedInUser.uid),
   });
+};
+
+export const incrementCount = async (fieldValue) => {
+  const loggedInUser = getCurrentUser();
+  const loggedInUserRef = userDb.doc(loggedInUser.uid);
+
+  switch (fieldValue) {
+    case ContributorFields.ANSWERS_PICKED: {
+      await loggedInUserRef.update({
+        answersPicked: firebaseRef.firestore.FieldValue.increment(1),
+      });
+      break;
+    }
+
+    case ContributorFields.QUESTIONS_ANSWERED: {
+      await loggedInUserRef.update({
+        questionsAnswered: firebaseRef.firestore.FieldValue.increment(1),
+      });
+      break;
+    }
+
+    case ContributorFields.QUESTIONS_ASKED: {
+      await loggedInUserRef.update({
+        questionsAsked: firebaseRef.firestore.FieldValue.increment(1),
+      });
+      break;
+    }
+
+    default: {
+      console.log('default');
+    }
+  }
 };
