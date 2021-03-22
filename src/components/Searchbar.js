@@ -43,7 +43,7 @@ const SearchBarComponent = () => {
         <ModalContent>
           <ModalBody>
             <Flex align='flex-start' justify='center' direction='column' m={5}>
-              <CloseButton onClick={onClose} />
+              <CloseButton onClick={onClose} mb={5} />
               <InputGroup>
                 <InputLeftElement
                   pointerEvents='none'

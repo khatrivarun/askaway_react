@@ -2,17 +2,13 @@ import {
   Box,
   Button,
   Center,
-  Checkbox,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   Radio,
   RadioGroup,
   Text,
   Wrap,
 } from '@chakra-ui/react';
-import NavBarComponent from '../components/NavBar';
 import useSearch from '../hooks/useSearch';
 import LoadingPage from './Loading';
 import * as SearchFields from './../constants/searchFields';
@@ -22,7 +18,7 @@ import { IoArrowBack } from 'react-icons/io5';
 import { useHistory } from 'react-router';
 import FormfieldComponent from '../components/Formfield';
 import { LoadingAnimation } from '../components/utility/LottieAnimations';
-import categories from '../constants/categories';
+import CategoriesCheckboxComponent from '../components/CategoriesCheckbox';
 
 const SearchResultsPage = ({ searchQuery, searchMode }) => {
   const {
@@ -52,6 +48,9 @@ const SearchResultsPage = ({ searchQuery, searchMode }) => {
         Go back
       </Button>
       <Box>
+        <Box mx={5}>
+          <Heading>Search Results</Heading>
+        </Box>
         <FormfieldComponent
           label='Search Query'
           type='text'
@@ -59,45 +58,39 @@ const SearchResultsPage = ({ searchQuery, searchMode }) => {
           value={searchQueryState}
           handleChange={(event) => setSearchQuerystate(event.target.value)}
         />
-        <Text>What to search for?</Text>
-        <RadioGroup onChange={setSearchFieldState} value={searchFieldState}>
-          <Wrap>
-            <Radio value={SearchFields.QUESTIONS}>Questions</Radio>
-            <Radio value={SearchFields.USERS}>Users</Radio>
-          </Wrap>
-        </RadioGroup>
+        <Box mx={5}>
+          <Text>What to search for?</Text>
+          <RadioGroup onChange={setSearchFieldState} value={searchFieldState}>
+            <Wrap>
+              {searchFieldState === SearchFields.QUESTIONS ? (
+                <Radio m={5} value={SearchFields.QUESTIONS}>
+                  Questions
+                </Radio>
+              ) : searchFieldState ===
+                SearchFields.QUESTIONS_WITH_CATEGORIES ? (
+                <Radio m={5} value={SearchFields.QUESTIONS_WITH_CATEGORIES}>
+                  Questions
+                </Radio>
+              ) : (
+                <Radio m={5} value={SearchFields.QUESTIONS}>
+                  Questions
+                </Radio>
+              )}
+              <Radio value={SearchFields.USERS}>Users</Radio>
+            </Wrap>
+          </RadioGroup>
+        </Box>
       </Box>
       {(searchFieldState === SearchFields.QUESTIONS ||
         searchFieldState === SearchFields.QUESTIONS_WITH_CATEGORIES) && (
         <>
           <Box m={5}>
-            <FormControl>
-              <FormLabel>Categories</FormLabel>
-              <Wrap>
-                {categories.map((category) => (
-                  <Checkbox
-                    m={3}
-                    key={category.key}
-                    value={category.key}
-                    isChecked={categoriesState.indexOf(category.key) !== -1}
-                    onChange={() => {
-                      if (categoriesState.indexOf(category.key) === -1) {
-                        setCategoryState([...categoriesState, category.key]);
-                      } else {
-                        const finalCategoryKeys = categoriesState.filter(
-                          (key) => key !== category.key
-                        );
-
-                        setCategoryState(finalCategoryKeys);
-                      }
-                    }}
-                  >
-                    {category.title}
-                  </Checkbox>
-                ))}
-              </Wrap>
-            </FormControl>
+            <CategoriesCheckboxComponent
+              categoriesState={categoriesState}
+              setCategoryState={setCategoryState}
+            />
             <Button
+              colorScheme='teal'
               onClick={() =>
                 setSearchFieldState(SearchFields.QUESTIONS_WITH_CATEGORIES)
               }
