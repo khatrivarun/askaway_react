@@ -12,6 +12,8 @@ import QuestionsFormPage from '../../pages/QuestionsForm';
 import QuestionPage from '../../pages/Question';
 import QuestionEditFormWrapperPage from '../../pages/QuestionEditFormWrapper';
 import UserProfilePage from '../../pages/UserProfile';
+import SearchResultsPage from '../../pages/SearchResults';
+import * as SearchFields from './../../constants/searchFields';
 
 const Routes = () => {
   return (
@@ -44,6 +46,26 @@ const Routes = () => {
           exact
           path='/account/:id'
           render={(props) => <UserProfilePage uid={props.match.params.id} />}
+        />
+        <PrivateRoute
+          exact
+          path='/search/account/:searchQuery'
+          render={(props) => (
+            <SearchResultsPage
+              searchQuery={props.match.params.searchQuery}
+              searchMode={SearchFields.USERS}
+            />
+          )}
+        />
+        <PrivateRoute
+          exact
+          path='/search/questions/:searchQuery'
+          render={(props) => (
+            <SearchResultsPage
+              searchQuery={props.match.params.searchQuery}
+              searchMode={SearchFields.QUESTIONS}
+            />
+          )}
         />
       </Switch>
     </Router>

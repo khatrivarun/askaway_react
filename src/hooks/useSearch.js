@@ -14,18 +14,24 @@ const useSearch = (
   const [result, setResult] = useState([]);
   const [error, setError] = useState(null);
 
+  const [searchFieldState] = useState(searchField);
+  const [searchQueryState] = useState(searchQuery);
+  const [categoriesState] = useState(categories);
+
   useEffect(() => {
-    switch (searchField) {
+    switch (searchFieldState) {
       case SearchFields.QUESTIONS: {
         axios
           .get(
             'https://us-central1-askaway-react-dev.cloudfunctions.net/searchForQuestions',
-            { params: { searchQuery: searchQuery } }
+            { params: { searchQuery: searchQueryState } }
           )
           .then((response) =>
             QuestionUtils.convertToQuestionObject(response.data)
           )
-          .then((questions) => setResult(questions))
+          .then((questions) => {
+            setResult(questions);
+          })
           .catch((error) => setError(error))
           .then(() => setLoading(false));
         break;
@@ -34,7 +40,7 @@ const useSearch = (
         axios
           .get(
             'https://us-central1-askaway-react-dev.cloudfunctions.net/searchForUsers',
-            { params: { searchQuery: searchQuery } }
+            { params: { searchQuery: searchQueryState } }
           )
           .then((response) => AuthUtils.getUsersFromFirebase(response.data))
           .then((users) => setResult(users))
@@ -48,8 +54,8 @@ const useSearch = (
             'https://us-central1-askaway-react-dev.cloudfunctions.net/searchForQuestionsByCategories',
             {
               params: {
-                searchQuery: searchQuery,
-                categories: CategoryUtils.categoryQuery(categories),
+                searchQuery: searchQueryState,
+                categories: CategoryUtils.categoryQuery(categoriesState),
               },
             }
           )
@@ -64,7 +70,7 @@ const useSearch = (
       default: {
       }
     }
-  }, [searchField, searchQuery, categories]);
+  }, [searchFieldState, searchQueryState, categoriesState]);
 
   return { loading, result, error };
 };
