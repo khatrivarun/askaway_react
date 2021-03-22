@@ -2,8 +2,8 @@ import * as SearchFields from './../constants/searchFields';
 import * as CategoryUtils from './../utils/categories';
 import * as QuestionUtils from './../utils/questions';
 import * as AuthUtils from './../utils/auth';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { questionsIndex, usersIndex } from '../utils/Algolia';
 
 const useSearch = (
   searchField = SearchFields.QUESTIONS,
@@ -11,60 +11,50 @@ const useSearch = (
   categories = []
 ) => {
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState([]);
+  const [questionResult, setQuestionResult] = useState([]);
+  const [userResult, setUserResult] = useState([]);
   const [error, setError] = useState(null);
 
-  const [searchFieldState] = useState(searchField);
-  const [searchQueryState] = useState(searchQuery);
-  const [categoriesState] = useState(categories);
+  const [searchFieldState, setSearchFieldState] = useState(searchField);
+  const [searchQueryState, setSearchQuerystate] = useState(searchQuery);
+  const [categoriesState, setCategoryState] = useState(categories);
 
   useEffect(() => {
     switch (searchFieldState) {
       case SearchFields.QUESTIONS: {
-        axios
-          .get(
-            'https://us-central1-askaway-react-dev.cloudfunctions.net/searchForQuestions',
-            { params: { searchQuery: searchQueryState } }
-          )
+        questionsIndex
+          .search(searchQueryState)
           .then((response) =>
-            QuestionUtils.convertToQuestionObject(response.data)
+            QuestionUtils.convertAlgoliaToQuestionObject(response.hits)
           )
-          .then((questions) => {
-            setResult(questions);
-          })
+          .then((data) => setQuestionResult(data))
           .catch((error) => setError(error))
-          .then(() => setLoading(false));
+          .finally(() => setLoading(false));
         break;
       }
       case SearchFields.USERS: {
-        axios
-          .get(
-            'https://us-central1-askaway-react-dev.cloudfunctions.net/searchForUsers',
-            { params: { searchQuery: searchQueryState } }
-          )
-          .then((response) => AuthUtils.getUsersFromFirebase(response.data))
-          .then((users) => setResult(users))
+        usersIndex
+          .search(searchQueryState)
+          .then((response) => AuthUtils.getUsersFromFirebase(response.hits))
+          .then((data) => setUserResult(data))
           .catch((error) => setError(error))
-          .then(() => setLoading(false));
+          .finally(() => setLoading(false));
         break;
       }
       case SearchFields.QUESTIONS_WITH_CATEGORIES: {
-        axios
-          .get(
-            'https://us-central1-askaway-react-dev.cloudfunctions.net/searchForQuestionsByCategories',
-            {
-              params: {
-                searchQuery: searchQueryState,
-                categories: CategoryUtils.categoryQuery(categoriesState),
-              },
-            }
-          )
+        questionsIndex
+          .search(searchQueryState, {
+            filters: CategoryUtils.generateCategoryQuery(
+              'categories',
+              categoriesState
+            ),
+          })
           .then((response) =>
-            QuestionUtils.convertToQuestionObject(response.data)
+            QuestionUtils.convertAlgoliaToQuestionObject(response.hits)
           )
-          .then((questions) => setResult(questions))
+          .then((data) => setQuestionResult(data))
           .catch((error) => setError(error))
-          .then(() => setLoading(false));
+          .finally(() => setLoading(false));
         break;
       }
       default: {
@@ -72,7 +62,18 @@ const useSearch = (
     }
   }, [searchFieldState, searchQueryState, categoriesState]);
 
-  return { loading, result, error };
+  return {
+    loading,
+    questionResult,
+    userResult,
+    error,
+    searchFieldState,
+    searchQueryState,
+    categoriesState,
+    setSearchFieldState,
+    setSearchQuerystate,
+    setCategoryState,
+  };
 };
 
 export default useSearch;

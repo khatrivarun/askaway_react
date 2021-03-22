@@ -9,7 +9,7 @@ const QuestionListComponent = ({
   children,
 }) => {
   return (
-    <Flex direction='column' m={1} align='center' justify='center'>
+    <Flex direction='column' m={1} align='center' justify='center' w='100%'>
       {questions.map((question) => (
         <QuestionCardComponent
           key={question.id}

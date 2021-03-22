@@ -42,6 +42,26 @@ export const convertToQuestionObject = async (questions) => {
   return questionObjects;
 };
 
+export const convertAlgoliaToQuestionObject = async (questions) => {
+  const questionObjects = await Promise.all(
+    questions.map(async (question) => {
+      const questionObject = new Question();
+      questionObject.fromJson(question);
+      questionObject.categories = convertKeytoCategories(
+        questionObject.categories
+      );
+
+      questionObject.byUser = await AuthUtils.getUserFromFirebase(
+        questionObject.byUser
+      );
+
+      return questionObject;
+    })
+  );
+
+  return questionObjects;
+};
+
 export const fetchQuestion = async (questionId) => {
   const questionDoc = await questionDb.doc(questionId).get();
   const questionData = questionDoc.data();
@@ -124,7 +144,7 @@ export const unmarkAnswer = async (questionId, userId) => {
   });
 
   await AuthUtils.decrementCount(ContributorFields.ANSWERS_PICKED, userId);
-}
+};
 export const fetchUsersQuestionsInRealTime = (uid) => {
   return questionDb.where('byUser', '==', uid);
 };
