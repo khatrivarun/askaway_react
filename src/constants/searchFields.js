@@ -1,0 +1,3 @@
+export const USERS = 'USERS';
+export const QUESTIONS = 'QUESTIONS';
+export const QUESTIONS_WITH_CATEGORIES = 'QUESTIONS WITH CATEGORIES';
