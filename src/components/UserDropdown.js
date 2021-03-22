@@ -23,7 +23,7 @@ const UserDropdownComponent = () => {
       <MenuButton
         as={Button}
         rightIcon={<IoCaretDown />}
-        w={{ base: 300, md: 150 }}
+        w={{ base: 150, md: 150 }}
         bgColor='teal'
         color='white'
       >

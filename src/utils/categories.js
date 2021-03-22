@@ -1,5 +1,7 @@
-export const categoryQuery = (categories) => {
-  const categoryKeys = categories.map((category) => category.key);
+export const generateCategoryQuery = (categoryName, categories) => {
+  const categoryQueryArray = categories.map(
+    (category) => `${categoryName}:${category}`
+  );
 
-  return categoryKeys.join(';');
+  return categoryQueryArray.join(' AND ');
 };

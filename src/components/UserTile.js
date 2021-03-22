@@ -1,7 +1,13 @@
 import { Avatar, Flex, Text } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 
-const UserTileComponent = ({ uid, photoUrl, displayName, closeModal }) => {
+const UserTileComponent = ({
+  uid,
+  photoUrl,
+  displayName,
+  closeModal,
+  isInModal = true,
+}) => {
   const history = useHistory();
   return (
     <Flex
@@ -19,7 +25,7 @@ const UserTileComponent = ({ uid, photoUrl, displayName, closeModal }) => {
       <Text
         cursor='pointer'
         onClick={() => {
-          closeModal();
+          if (isInModal) closeModal();
           history.push(`/account/${uid}`);
         }}
       >
