@@ -29,6 +29,14 @@ export const getUserFromFirebase = async (uid) => {
   return loggedInUser;
 };
 
+export const getUsersFromFirebase = async (users) => {
+  const firebaseUsers = await Promise.all(
+    users.map(async (user) => await getUserFromFirebase(user.userId))
+  );
+
+  return firebaseUsers;
+};
+
 export const convertToUserObject = (user) => {
   const userObject = new User();
   userObject.fromJSON(user.data());
@@ -427,7 +435,7 @@ export const decrementCount = async (
       console.log('default');
     }
   }
-}
+};
 
 export const fetchUserInRealTime = (uid) => {
   return userDb.doc(uid);
