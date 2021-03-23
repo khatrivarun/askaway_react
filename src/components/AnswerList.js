@@ -3,6 +3,7 @@ import * as AnswerUtils from './../utils/answers';
 import * as QuestionUtils from './../utils/questions';
 import { Answer } from '../models/answer';
 import { Heading } from '@chakra-ui/layout';
+import Bugsnag from '@bugsnag/js';
 
 const AnswerListComponent = ({
   selectedAnswerId,
@@ -24,33 +25,65 @@ const AnswerListComponent = ({
   );
 
   const deleteAnswer = async (answerId) => {
-    await AnswerUtils.deleteAnswer(answerId, questionId, answerList);
+    try {
+      await AnswerUtils.deleteAnswer(answerId, questionId, answerList);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const likeAnswer = async (answerId) => {
-    await AnswerUtils.likeAnswer(answerId, questionId, answerList);
+    try {
+      await AnswerUtils.likeAnswer(answerId, questionId, answerList);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const unlikeAnswer = async (answerId) => {
-    await AnswerUtils.unlikeAnswer(answerId, questionId, answerList);
+    try {
+      await AnswerUtils.unlikeAnswer(answerId, questionId, answerList);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const updateAnswer = async (answerId, newAnswer) => {
-    await AnswerUtils.updateAnswer(questionId, answerId, newAnswer, answerList);
+    try {
+      await AnswerUtils.updateAnswer(
+        questionId,
+        answerId,
+        newAnswer,
+        answerList
+      );
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const selectAsMarkedAnswer = async (answerId, userId) => {
-    if (selectedAnswerId !== '') {
+    try {
+      if (selectedAnswerId !== '') {
+        await QuestionUtils.unmarkAnswer(
+          questionId,
+          selectedAnswer.byUser.userId
+        );
+      }
+      await QuestionUtils.markAnswer(questionId, answerId, userId);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
+  };
+
+  const unselectAsMarkedAnswer = async () => {
+    try {
       await QuestionUtils.unmarkAnswer(
         questionId,
         selectedAnswer.byUser.userId
       );
+    } catch (error) {
+      Bugsnag.notify(error);
     }
-    await QuestionUtils.markAnswer(questionId, answerId, userId);
-  };
-
-  const unselectAsMarkedAnswer = async () => {
-    await QuestionUtils.unmarkAnswer(questionId, selectedAnswer.byUser.userId);
   };
 
   return (

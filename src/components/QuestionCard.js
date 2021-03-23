@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/js';
 import {
   Box,
   Text,
@@ -125,10 +126,14 @@ const QuestionCardComponent = ({
               )
             }
             onClick={async () => {
-              if (likes.indexOf(currentUser.uid) !== -1) {
-                QuestionUtils.unlikeQuestion(likes, questionId);
-              } else {
-                QuestionUtils.likeQuestion(likes, questionId);
+              try {
+                if (likes.indexOf(currentUser.uid) !== -1) {
+                  await QuestionUtils.unlikeQuestion(likes, questionId);
+                } else {
+                  await QuestionUtils.likeQuestion(likes, questionId);
+                }
+              } catch (error) {
+                Bugsnag.notify(error);
               }
             }}
           >
@@ -155,10 +160,14 @@ const QuestionCardComponent = ({
                 <Button
                   colorScheme='teal'
                   onClick={async () => {
-                    await deleteQuestion(questionId);
+                    try {
+                      await deleteQuestion(questionId);
 
-                    if (displayFull) {
-                      history.goBack();
+                      if (displayFull) {
+                        history.goBack();
+                      }
+                    } catch (error) {
+                      Bugsnag.notify(error);
                     }
                   }}
                 >

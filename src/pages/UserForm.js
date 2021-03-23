@@ -17,6 +17,7 @@ import * as AuthUtils from '../utils/auth';
 import { useLocation, useHistory } from 'react-router-dom';
 import { LoadingAnimation } from '../components/utility/LottieAnimations';
 import { FcGoogle } from 'react-icons/fc';
+import Bugsnag from '@bugsnag/js';
 
 const UserFormPage = () => {
   const toast = useToast();
@@ -31,6 +32,7 @@ const UserFormPage = () => {
       onClose();
       history.push('/');
     } catch (error) {
+      Bugsnag.notify(error);
       onClose();
       toast({
         title: 'Error occured!',
@@ -59,6 +61,7 @@ const UserFormPage = () => {
       }
       onClose();
     } catch (error) {
+      Bugsnag.notify(error);
       onClose();
       toast({
         title: 'Error occured!',

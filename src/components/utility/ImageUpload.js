@@ -1,5 +1,6 @@
 import { Flex, Button, Image } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
+import Bugsnag from '@bugsnag/js';
 
 const ImageUploadComponent = ({ defaultImage, onUpload }) => {
   const [image, setImage] = useState(null);
@@ -42,7 +43,13 @@ const ImageUploadComponent = ({ defaultImage, onUpload }) => {
       </Button>
       <Button
         m={3}
-        onClick={async () => await onUpload(image)}
+        onClick={async () => {
+          try {
+            await onUpload(image);
+          } catch (error) {
+            Bugsnag.notify(error);
+          }
+        }}
         colorScheme='teal'
       >
         Upload Image

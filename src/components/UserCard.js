@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/js';
 import {
   Box,
   Button,
@@ -42,7 +43,9 @@ const UserCardComponent = ({ uid }) => {
         setUser(userFromFirebase);
         setLoading(false);
       },
-      (error) => console.log(error)
+      (error) => {
+        Bugsnag.notify(error);
+      }
     );
   }, [uid]);
 
@@ -113,14 +116,18 @@ const UserCardComponent = ({ uid }) => {
               <Flex mt={5}>
                 <Button
                   onClick={async () => {
-                    if (
-                      user.followers
-                        .map((user) => user.userId)
-                        .indexOf(currentUser.uid) === -1
-                    ) {
-                      await AuthUtils.followUser(user.userId);
-                    } else {
-                      await AuthUtils.unfollowUser(user.userId);
+                    try {
+                      if (
+                        user.followers
+                          .map((user) => user.userId)
+                          .indexOf(currentUser.uid) === -1
+                      ) {
+                        await AuthUtils.followUser(user.userId);
+                      } else {
+                        await AuthUtils.unfollowUser(user.userId);
+                      }
+                    } catch (error) {
+                      Bugsnag.notify(error);
                     }
                   }}
                   colorScheme='teal'

@@ -13,6 +13,7 @@ import { IoCaretDown } from 'react-icons/io5';
 import { useHistory } from 'react-router';
 import * as AuthUtils from './../utils/auth';
 import useFirebaseUser from '../hooks/useFirebaseUser';
+import Bugsnag from '@bugsnag/js';
 
 const UserDropdownComponent = () => {
   const history = useHistory();
@@ -42,7 +43,15 @@ const UserDropdownComponent = () => {
         <MenuItem onClick={() => history.push('/account/me')}>
           View Your Profile
         </MenuItem>
-        <MenuItem onClick={async () => await AuthUtils.logout()}>
+        <MenuItem
+          onClick={async () => {
+            try {
+              await AuthUtils.logout();
+            } catch (error) {
+              Bugsnag.notify(error);
+            }
+          }}
+        >
           Log Out
         </MenuItem>
       </MenuList>

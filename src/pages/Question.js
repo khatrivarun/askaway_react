@@ -11,6 +11,7 @@ import { Question } from '../models/question';
 import AnswerListComponent from '../components/AnswerList';
 import AnswerFormComponent from '../components/AnswerForm';
 import { Answer } from '../models/answer';
+import Bugsnag from '@bugsnag/js';
 
 const QuestionPage = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -20,28 +21,31 @@ const QuestionPage = ({ id }) => {
   const currentUser = AuthUtils.getCurrentUser();
 
   useEffect(() => {
-    QuestionUtils.fetchQuestionInRealTime(id).onSnapshot(async (question) => {
-      if (question.exists) {
-        const questionObject = new Question();
-        questionObject.fromJson(question.data());
+    return QuestionUtils.fetchQuestionInRealTime(id).onSnapshot(
+      async (question) => {
+        if (question.exists) {
+          const questionObject = new Question();
+          questionObject.fromJson(question.data());
 
-        questionObject.categories = await QuestionUtils.convertKeytoCategories(
-          questionObject.categories
-        );
+          questionObject.categories = await QuestionUtils.convertKeytoCategories(
+            questionObject.categories
+          );
 
-        questionObject.answers = await AnswerUtils.getAnswersForQuestion(
-          questionObject.answers
-        );
-        questionObject.byUser = await AuthUtils.getUserFromFirebase(
-          questionObject.byUser
-        );
+          questionObject.answers = await AnswerUtils.getAnswersForQuestion(
+            questionObject.answers
+          );
+          questionObject.byUser = await AuthUtils.getUserFromFirebase(
+            questionObject.byUser
+          );
 
-        setQuestion(questionObject);
-      } else {
-        set404(true);
-      }
-      setLoading(false);
-    });
+          setQuestion(questionObject);
+        } else {
+          set404(true);
+        }
+        setLoading(false);
+      },
+      (error) => Bugsnag.notify(error)
+    );
   }, [id]);
 
   const editQuestion = () => {
@@ -49,19 +53,27 @@ const QuestionPage = ({ id }) => {
   };
 
   const deleteQuestion = async (id) => {
-    await QuestionUtils.deleteQuestion(id);
+    try {
+      await QuestionUtils.deleteQuestion(id);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const addAnswer = async (answer) => {
-    const answerList = question.answers.map((answer) =>
-      new Answer(
-        answer.id,
-        answer.byUser.userId,
-        answer.answer,
-        answer.likes
-      ).toJson()
-    );
-    await AnswerUtils.addAnswer(question.id, answer, answerList);
+    try {
+      const answerList = question.answers.map((answer) =>
+        new Answer(
+          answer.id,
+          answer.byUser.userId,
+          answer.answer,
+          answer.likes
+        ).toJson()
+      );
+      await AnswerUtils.addAnswer(question.id, answer, answerList);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   return loading ? (

@@ -14,6 +14,7 @@ import QuestionEditFormWrapperPage from '../../pages/QuestionEditFormWrapper';
 import UserProfilePage from '../../pages/UserProfile';
 import SearchResultsPage from '../../pages/SearchResults';
 import * as SearchFields from './../../constants/searchFields';
+import _500Page from '../../pages/500';
 
 const Routes = () => {
   return (
@@ -22,6 +23,7 @@ const Routes = () => {
         <PublicRoute exact path='/' component={SplashPage} />
         <PublicRoute exact path='/register' component={UserFormPage} />
         <PublicRoute exact path='/login' component={UserFormPage} />
+        <PublicRoute exact path='/500' component={_500Page} />
         <PrivateRoute exact path='/questions' component={QuestionsPage} />
         <PrivateRoute exact path='/account/edit' component={AccountEditPage} />
         <PrivateRoute

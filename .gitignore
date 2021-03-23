@@ -24,3 +24,4 @@ yarn-error.log*
 src/config/firebase.js
 src/config/algolia.js
 .eslintcache
+src/config/bugsnag.js

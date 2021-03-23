@@ -2,7 +2,7 @@ import { Avatar, Flex, Link, Text } from '@chakra-ui/react';
 
 const UserListComponent = ({ users }) => {
   return (
-    <Flex direction='column' align='center' justify='center'>
+    <Flex direction='column' align='center' justify='center' w='100%'>
       {users.map((user) => (
         <Link href={`/account/${user.userId}`} key={user.userId}>
           <Flex

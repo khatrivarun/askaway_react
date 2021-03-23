@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { IoHeart, IoEllipsisVertical, IoHeartOutline } from 'react-icons/io5';
 import * as AuthUtils from './../utils/auth';
 import AnswerFormComponent from './AnswerForm';
+import Bugsnag from '@bugsnag/js';
 
 const AnswerCardComponent = ({
   id,
@@ -87,11 +88,15 @@ const AnswerCardComponent = ({
               />
               <MenuList>
                 <MenuItem
-                  onClick={async () =>
-                    !markedAnswer
-                      ? await markAnswer(id, user.userId)
-                      : await unmarkAnswer()
-                  }
+                  onClick={async () => {
+                    try {
+                      !markedAnswer
+                        ? await markAnswer(id, user.userId)
+                        : await unmarkAnswer();
+                    } catch (error) {
+                      Bugsnag.notify(error);
+                    }
+                  }}
                 >
                   {!markedAnswer ? 'Mark As Answer' : 'Unmark this answer'}
                 </MenuItem>
@@ -108,11 +113,15 @@ const AnswerCardComponent = ({
               />
               <MenuList>
                 <MenuItem
-                  onClick={async () =>
-                    !markedAnswer
-                      ? await markAnswer(id, user.userId)
-                      : await unmarkAnswer()
-                  }
+                  onClick={async () => {
+                    try {
+                      !markedAnswer
+                        ? await markAnswer(id, user.userId)
+                        : await unmarkAnswer();
+                    } catch (error) {
+                      Bugsnag.notify(error);
+                    }
+                  }}
                 >
                   {!markedAnswer ? 'Mark As Answer' : 'Unmark this answer'}
                 </MenuItem>
@@ -134,10 +143,14 @@ const AnswerCardComponent = ({
               )
             }
             onClick={async () => {
-              if (likes.indexOf(currentUser.uid) !== -1) {
-                await unlikeAnswer(id);
-              } else {
-                await likeAnswer(id);
+              try {
+                if (likes.indexOf(currentUser.uid) !== -1) {
+                  await unlikeAnswer(id);
+                } else {
+                  await likeAnswer(id);
+                }
+              } catch (error) {
+                Bugsnag.notify(error);
               }
             }}
           >
@@ -163,7 +176,13 @@ const AnswerCardComponent = ({
                 <Flex justify='space-between' my={5}>
                   <Button
                     colorScheme='teal'
-                    onClick={async () => deleteAnswer(id)}
+                    onClick={async () => {
+                      try {
+                        await deleteAnswer(id);
+                      } catch (error) {
+                        Bugsnag.notify(error);
+                      }
+                    }}
                   >
                     Yes
                   </Button>

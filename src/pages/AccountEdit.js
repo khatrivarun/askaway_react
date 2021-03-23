@@ -16,10 +16,18 @@ import ChangeEmailTabComponent from '../components/ChangeEmailTab';
 import ChangePasswordTabComponent from '../components/ChangePasswordTab';
 import useFirebaseUser from '../hooks/useFirebaseUser';
 import LoadingPage from './Loading';
+import * as AuthUtils from './../utils/auth';
 
 const AccountEditPage = () => {
   const { loading, user } = useFirebaseUser();
   const history = useHistory();
+  const userFirebase = AuthUtils.getCurrentUser();
+
+  const isGoogleAccount =
+    userFirebase.providerData
+      .map((data) => data.providerId)
+      .filter((data) => data === 'google.com').length > 0;
+
   return !loading ? (
     <Flex
       h='100vh'
@@ -40,8 +48,12 @@ const AccountEditPage = () => {
       <Tabs variant='soft-rounded' colorScheme='teal'>
         <TabList>
           <Tab>Update User Profile</Tab>
-          <Tab>Change Your Email</Tab>
-          <Tab>Change Your Password</Tab>
+          {!isGoogleAccount && (
+            <>
+              <Tab>Change Your Email</Tab>
+              <Tab>Change Your Password</Tab>
+            </>
+          )}
           <Tab>Delete Your Account</Tab>
         </TabList>
         <TabPanels>

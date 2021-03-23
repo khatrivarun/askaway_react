@@ -16,35 +16,44 @@ import { LoadingAnimation } from './utility/LottieAnimations';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormfieldComponent from './Formfield';
+import Bugsnag from '@bugsnag/js';
 
 const AccountDetailsTabComponent = ({ user }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const imageUpload = async (file) => {
-    onOpen();
-    await AuthUtils.updateProfilePicture(file);
-    onClose();
-    toast({
-      title: 'Success!',
-      status: 'success',
-      description: 'Profile Picture updated',
-      duration: 9000,
-      isClosable: true,
-    });
+    try {
+      onOpen();
+      await AuthUtils.updateProfilePicture(file);
+      onClose();
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'Profile Picture updated',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const onChangeDisplayName = async (values) => {
-    onOpen();
-    await AuthUtils.updateName(values.name);
-    onClose();
-    toast({
-      title: 'Success!',
-      status: 'success',
-      description: 'Name updated',
-      duration: 9000,
-      isClosable: true,
-    });
+    try {
+      onOpen();
+      await AuthUtils.updateName(values.name);
+      onClose();
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'Name updated',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   const formik = useFormik({

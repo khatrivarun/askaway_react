@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import categories from '../constants/categories';
 import { useHistory } from 'react-router-dom';
 import * as QuestionUtils from './../utils/questions';
+import Bugsnag from '@bugsnag/js';
 
 const QuestionsFormPage = ({
   questionId = '',
@@ -45,36 +46,40 @@ const QuestionsFormPage = ({
   }, [questionCategories, isEdit]);
 
   const onSubmit = async (values) => {
-    if (categoryKeys.length === 0) {
-      setCategoriesErrorMessage(
-        'Please select categories your question belongs to'
-      );
-      setCategoriesValid(false);
+    try {
+      if (categoryKeys.length === 0) {
+        setCategoriesErrorMessage(
+          'Please select categories your question belongs to'
+        );
+        setCategoriesValid(false);
 
-      return;
-    } else {
-      setCategoriesErrorMessage('');
-      setCategoriesValid(true);
-    }
-    if (!isEdit) {
-      await QuestionUtils.addQuestion(
-        values.question,
-        values.description,
-        categoryKeys
-      );
-    } else {
-      await QuestionUtils.updateQuestion(
-        questionId,
-        values.question,
-        values.description,
-        categoryKeys
-      );
-    }
+        return;
+      } else {
+        setCategoriesErrorMessage('');
+        setCategoriesValid(true);
+      }
+      if (!isEdit) {
+        await QuestionUtils.addQuestion(
+          values.question,
+          values.description,
+          categoryKeys
+        );
+      } else {
+        await QuestionUtils.updateQuestion(
+          questionId,
+          values.question,
+          values.description,
+          categoryKeys
+        );
+      }
 
-    if (fromLink) {
-      history.goBack();
-    } else {
-      onCloseForm();
+      if (fromLink) {
+        history.goBack();
+      } else {
+        onCloseForm();
+      }
+    } catch (error) {
+      Bugsnag.notify(error);
     }
   };
 

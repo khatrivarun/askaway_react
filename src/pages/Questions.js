@@ -5,6 +5,7 @@ import FABComponent from '../components/FAB';
 import QuestionsFormPage from './QuestionsForm';
 import * as QuestionUtils from './../utils/questions';
 import QuestionListComponent from '../components/QuestionList';
+import Bugsnag from '@bugsnag/js';
 
 const QuestionsPage = () => {
   const [isQuestionFormOpen, setQuestionFormOpen] = useState(false);
@@ -21,7 +22,7 @@ const QuestionsPage = () => {
         setQuestions(
           await QuestionUtils.convertToQuestionObject(querySnapshot)
         ),
-      (error) => console.log(error)
+      (error) => Bugsnag.notify(error)
     );
   }, []);
 
@@ -45,7 +46,11 @@ const QuestionsPage = () => {
   };
 
   const deleteQuestion = async (id) => {
-    await QuestionUtils.deleteQuestion(id);
+    try {
+      await QuestionUtils.deleteQuestion(id);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   return !isQuestionFormOpen ? (

@@ -2,6 +2,7 @@ import { Button, Flex } from '@chakra-ui/react';
 import FormfieldComponent from './Formfield';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import Bugsnag from '@bugsnag/js';
 
 const AnswerFormComponent = ({
   answerId = '',
@@ -12,13 +13,17 @@ const AnswerFormComponent = ({
   onModalClose,
 }) => {
   const onSubmit = async (values) => {
-    if (!isEdit) {
-      await addAnswer(values.answer);
-    } else {
-      await updateAnswer(answerId, values.answer);
-      onModalClose();
+    try {
+      if (!isEdit) {
+        await addAnswer(values.answer);
+      } else {
+        await updateAnswer(answerId, values.answer);
+        onModalClose();
+      }
+      formik.handleReset();
+    } catch (error) {
+      Bugsnag.notify(error);
     }
-    formik.handleReset();
   };
 
   const formik = useFormik({
