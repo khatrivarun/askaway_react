@@ -2,8 +2,9 @@ import AnswerCardComponent from './AnswerCard';
 import * as AnswerUtils from './../utils/answers';
 import * as QuestionUtils from './../utils/questions';
 import { Answer } from '../models/answer';
-import { Heading } from '@chakra-ui/layout';
+import { Flex, Heading, Text } from '@chakra-ui/layout';
 import Bugsnag from '@bugsnag/js';
+import { NoDataAnimation } from './utility/LottieAnimations';
 
 const AnswerListComponent = ({
   selectedAnswerId,
@@ -108,23 +109,40 @@ const AnswerListComponent = ({
         </>
       )}
       <Heading>Answers</Heading>
-      {answers
-        .filter((answer) => answer.id !== selectedAnswerId)
-        .map((answer) => (
-          <AnswerCardComponent
-            key={answer.id}
-            id={answer.id}
-            user={answer.byUser}
-            answer={answer.answer}
-            likes={answer.likes}
-            updateAnswer={updateAnswer}
-            deleteAnswer={deleteAnswer}
-            isOwnQuestion={isOwnQuestion}
-            likeAnswer={likeAnswer}
-            unlikeAnswer={unlikeAnswer}
-            markAnswer={selectAsMarkedAnswer}
-          />
-        ))}
+      {answers.length > 0 ? (
+        answers
+          .filter((answer) => answer.id !== selectedAnswerId)
+          .map((answer) => (
+            <AnswerCardComponent
+              key={answer.id}
+              id={answer.id}
+              user={answer.byUser}
+              answer={answer.answer}
+              likes={answer.likes}
+              updateAnswer={updateAnswer}
+              deleteAnswer={deleteAnswer}
+              isOwnQuestion={isOwnQuestion}
+              likeAnswer={likeAnswer}
+              unlikeAnswer={unlikeAnswer}
+              markAnswer={selectAsMarkedAnswer}
+            />
+          ))
+      ) : (
+        <Flex
+          w={{ base: 300, md: 'md', lg: 'lg', xl: '2xl' }}
+          borderWidth='1px'
+          borderRadius='lg'
+          overflow='hidden'
+          p={30}
+          my={5}
+          direction='column'
+          justify='center'
+          align='center'
+        >
+          <NoDataAnimation />
+          <Text>No Data Found!</Text>
+        </Flex>
+      )}
     </>
   );
 };

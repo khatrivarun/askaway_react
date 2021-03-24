@@ -19,15 +19,13 @@ const SearchQuestionListWrapperComponent = ({ questions }) => {
     }
   };
 
-  return questions.length > 0 ? (
+  return (
     <QuestionListComponent
       questions={questions}
       userProfileMode={true}
       editQuestion={editQuestion}
       deleteQuestion={deleteQuestion}
     />
-  ) : (
-    <Text>No results</Text>
   );
 };
 

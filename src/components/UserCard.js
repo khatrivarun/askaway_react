@@ -18,6 +18,7 @@ import {
 import { useEffect, useState } from 'react';
 import * as AuthUtils from './../utils/auth';
 import UserTileComponent from './UserTile';
+import { NoDataAnimation } from './utility/LottieAnimations';
 
 const UserCardComponent = ({ uid }) => {
   const [user, setUser] = useState(null);
@@ -157,15 +158,32 @@ const UserCardComponent = ({ uid }) => {
                 <Text>
                   {modalMode === 'following' ? 'Following' : 'Followers'}
                 </Text>
-                {modalData.map((user) => (
-                  <UserTileComponent
-                    key={user.userId}
-                    uid={user.userId}
-                    photoUrl={user.photoUrl}
-                    displayName={user.displayName}
-                    closeModal={onClose}
-                  />
-                ))}
+                {modalData.length > 0 ? (
+                  modalData.map((user) => (
+                    <UserTileComponent
+                      key={user.userId}
+                      uid={user.userId}
+                      photoUrl={user.photoUrl}
+                      displayName={user.displayName}
+                      closeModal={onClose}
+                    />
+                  ))
+                ) : (
+                  <Flex
+                    direction='column'
+                    align='center'
+                    justify='center'
+                    w='100%'
+                    borderWidth='1px'
+                    borderRadius='lg'
+                    overflow='hidden'
+                    p={3}
+                    mt={5}
+                  >
+                    <NoDataAnimation />
+                    <Text>No Data Found!</Text>
+                  </Flex>
+                )}
               </Flex>
             </ModalBody>
           </ModalContent>
