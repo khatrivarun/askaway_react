@@ -17,6 +17,9 @@ import {
   ModalBody,
   Wrap,
   Tag,
+  Center,
+  Heading,
+  useToast,
 } from '@chakra-ui/react';
 import {
   IoHeart,
@@ -25,8 +28,10 @@ import {
   IoHeartOutline,
 } from 'react-icons/io5';
 import { useHistory } from 'react-router';
+import { useState } from 'react';
 import * as AuthUtils from './../utils/auth';
 import * as QuestionUtils from './../utils/questions';
+import { LoadingAnimation } from './utility/LottieAnimations';
 
 const QuestionCardComponent = ({
   questionId,
@@ -46,6 +51,8 @@ const QuestionCardComponent = ({
   const { colorMode } = useColorMode();
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   return (
     <>
@@ -154,30 +161,55 @@ const QuestionCardComponent = ({
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
-            <Box m={5}>
-              <Text>Are you sure you want to delete your question?</Text>
-              <Flex justify='space-between' my={5}>
-                <Button
-                  colorScheme='teal'
-                  onClick={async () => {
-                    try {
-                      await deleteQuestion(questionId);
+            {!loading ? (
+              <Box m={5}>
+                <Text>Are you sure you want to delete your question?</Text>
+                <Flex justify='space-between' my={5}>
+                  <Button
+                    colorScheme='teal'
+                    onClick={async () => {
+                      try {
+                        setLoading(true);
+                        await deleteQuestion(questionId);
 
-                      if (displayFull) {
-                        history.goBack();
+                        if (displayFull) {
+                          history.goBack();
+                        }
+
+                        setLoading(false);
+                        toast({
+                          title: 'Success!',
+                          description: 'Question Deleted.',
+                          status: 'success',
+                          duration: 9000,
+                          isClosable: true,
+                        });
+                      } catch (error) {
+                        setLoading(false);
+                        Bugsnag.notify(error);
+                        toast({
+                          title: 'Error!',
+                          description: error,
+                          status: 'error',
+                          duration: 9000,
+                          isClosable: true,
+                        });
                       }
-                    } catch (error) {
-                      Bugsnag.notify(error);
-                    }
-                  }}
-                >
-                  Yes
-                </Button>
-                <Button colorScheme='teal' onClick={onClose}>
-                  No
-                </Button>
-              </Flex>
-            </Box>
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button colorScheme='teal' onClick={onClose}>
+                    No
+                  </Button>
+                </Flex>
+              </Box>
+            ) : (
+              <Center>
+                <LoadingAnimation />
+                <Heading>Deleting question!</Heading>
+              </Center>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

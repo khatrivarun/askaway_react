@@ -2,7 +2,7 @@ import AnswerCardComponent from './AnswerCard';
 import * as AnswerUtils from './../utils/answers';
 import * as QuestionUtils from './../utils/questions';
 import { Answer } from '../models/answer';
-import { Flex, Heading, Text } from '@chakra-ui/layout';
+import { Flex, Heading, Text, useToast } from '@chakra-ui/react';
 import Bugsnag from '@bugsnag/js';
 import { NoDataAnimation } from './utility/LottieAnimations';
 
@@ -12,6 +12,7 @@ const AnswerListComponent = ({
   answers,
   isOwnQuestion,
 }) => {
+  const toast = useToast();
   const answerList = answers.map((answer) =>
     new Answer(
       answer.id,
@@ -25,11 +26,82 @@ const AnswerListComponent = ({
     (answer) => answer.id === selectedAnswerId
   );
 
-  const deleteAnswer = async (answerId) => {
+  const selectAsMarkedAnswer = async (answerId, userId) => {
     try {
-      await AnswerUtils.deleteAnswer(answerId, questionId, answerList);
+      if (selectedAnswerId !== '') {
+        await QuestionUtils.unmarkAnswer(
+          questionId,
+          selectedAnswer.byUser.userId
+        );
+      }
+      await QuestionUtils.markAnswer(questionId, answerId, userId);
+
+      toast({
+        title: 'Success!',
+        description: 'Selected as the final answer!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (error) {
       Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const unselectAsMarkedAnswer = async () => {
+    try {
+      await QuestionUtils.unmarkAnswer(
+        questionId,
+        selectedAnswer.byUser.userId
+      );
+
+      toast({
+        title: 'Success!',
+        description: 'Unselected as the final answer!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const deleteAnswer = async (answerId) => {
+    try {
+      if (answerId === selectedAnswerId) await unselectAsMarkedAnswer();
+      await AnswerUtils.deleteAnswer(answerId, questionId, answerList);
+
+      toast({
+        title: 'Success!',
+        description: 'Deleted the answer!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
 
@@ -38,6 +110,13 @@ const AnswerListComponent = ({
       await AnswerUtils.likeAnswer(answerId, questionId, answerList);
     } catch (error) {
       Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
 
@@ -46,6 +125,13 @@ const AnswerListComponent = ({
       await AnswerUtils.unlikeAnswer(answerId, questionId, answerList);
     } catch (error) {
       Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
 
@@ -59,31 +145,13 @@ const AnswerListComponent = ({
       );
     } catch (error) {
       Bugsnag.notify(error);
-    }
-  };
-
-  const selectAsMarkedAnswer = async (answerId, userId) => {
-    try {
-      if (selectedAnswerId !== '') {
-        await QuestionUtils.unmarkAnswer(
-          questionId,
-          selectedAnswer.byUser.userId
-        );
-      }
-      await QuestionUtils.markAnswer(questionId, answerId, userId);
-    } catch (error) {
-      Bugsnag.notify(error);
-    }
-  };
-
-  const unselectAsMarkedAnswer = async () => {
-    try {
-      await QuestionUtils.unmarkAnswer(
-        questionId,
-        selectedAnswer.byUser.userId
-      );
-    } catch (error) {
-      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
 
@@ -109,7 +177,7 @@ const AnswerListComponent = ({
         </>
       )}
       <Heading>Answers</Heading>
-      {answers.length > 0 ? (
+      {answers.filter((answer) => answer.id !== selectedAnswerId).length > 0 ? (
         answers
           .filter((answer) => answer.id !== selectedAnswerId)
           .map((answer) => (
