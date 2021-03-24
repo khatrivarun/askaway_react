@@ -1,10 +1,9 @@
 import Bugsnag from '@bugsnag/js';
-import { Text } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
-import * as QuestionUtils from './../utils/questions';
+import * as QuestionUtils from '../utils/questions';
 import QuestionListComponent from './QuestionList';
 
-const SearchQuestionListWrapperComponent = ({ questions }) => {
+const QuestionListWrapperComponent = ({ questions }) => {
   const history = useHistory();
 
   const editQuestion = (id) => {
@@ -29,4 +28,4 @@ const SearchQuestionListWrapperComponent = ({ questions }) => {
   );
 };
 
-export default SearchQuestionListWrapperComponent;
+export default QuestionListWrapperComponent;

@@ -148,3 +148,6 @@ export const unmarkAnswer = async (questionId, userId) => {
 export const fetchUsersQuestionsInRealTime = (uid) => {
   return questionDb.where('byUser', '==', uid);
 };
+
+export const categoricalQuestionInRealTime = (categoryKey) =>
+  questionDb.where('categories', 'array-contains-any', [categoryKey]);
