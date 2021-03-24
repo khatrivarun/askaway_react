@@ -10,12 +10,11 @@ import {
   Wrap,
 } from '@chakra-ui/react';
 import useSearch from '../hooks/useSearch';
-import LoadingPage from './Loading';
 import * as SearchFields from './../constants/searchFields';
 import SearchQuestionListWrapperComponent from '../components/SearchQuestionListWrapper';
 import UserListComponent from '../components/UserList';
 import { IoArrowBack } from 'react-icons/io5';
-import { useHistory } from 'react-router';
+import { Redirect, useHistory } from 'react-router';
 import FormfieldComponent from '../components/Formfield';
 import { LoadingAnimation } from '../components/utility/LottieAnimations';
 import CategoriesCheckboxComponent from '../components/CategoriesCheckbox';
@@ -36,13 +35,12 @@ const SearchResultsPage = ({ searchQuery, searchMode }) => {
 
   const history = useHistory();
 
-  return (
+  return !error ? (
     <Flex direction='column' m={10} align='flex-start'>
       <Button
         leftIcon={<IoArrowBack />}
         colorScheme='white'
         color='teal'
-        my={5}
         onClick={() => history.goBack()}
       >
         Go back
@@ -108,17 +106,19 @@ const SearchResultsPage = ({ searchQuery, searchMode }) => {
         </>
       )}
       {searchFieldState === SearchFields.USERS && (
-        <Box>
+        <Box w='100%'>
           {loading ? (
-            <LoadingPage>
-              <Text>Getting Search Results</Text>
-            </LoadingPage>
+            <Center w='100%' h='100%'>
+              <LoadingAnimation />
+            </Center>
           ) : (
             <UserListComponent users={userResult} />
           )}
         </Box>
       )}
     </Flex>
+  ) : (
+    <Redirect to='/500' />
   );
 };
 

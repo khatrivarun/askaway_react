@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import FormfieldComponent from './Formfield';
 import * as AuthUtils from './../utils/auth';
 import { LoadingAnimation } from './utility/LottieAnimations';
+import Bugsnag from '@bugsnag/js';
 
 const ChangeEmailTabComponent = ({ user }) => {
   const toast = useToast();
@@ -33,6 +34,7 @@ const ChangeEmailTabComponent = ({ user }) => {
         isClosable: true,
       });
     } catch (error) {
+      Bugsnag.notify(error);
       onClose();
       toast({
         title: 'Error occured!',

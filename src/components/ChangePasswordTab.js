@@ -15,6 +15,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormfieldComponent from './Formfield';
 import { LoadingAnimation } from './utility/LottieAnimations';
+import Bugsnag from '@bugsnag/js';
 
 const ChangePasswordTabComponent = () => {
   const toast = useToast();
@@ -33,6 +34,7 @@ const ChangePasswordTabComponent = () => {
         isClosable: true,
       });
     } catch (error) {
+      Bugsnag.notify(error);
       onClose();
       toast({
         title: 'Error occured!',

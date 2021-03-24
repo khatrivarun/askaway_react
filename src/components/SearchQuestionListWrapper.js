@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/js';
 import { Text } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 import * as QuestionUtils from './../utils/questions';
@@ -11,18 +12,20 @@ const SearchQuestionListWrapperComponent = ({ questions }) => {
   };
 
   const deleteQuestion = async (id) => {
-    await QuestionUtils.deleteQuestion(id);
+    try {
+      await QuestionUtils.deleteQuestion(id);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
-  return questions.length > 0 ? (
+  return (
     <QuestionListComponent
       questions={questions}
       userProfileMode={true}
       editQuestion={editQuestion}
       deleteQuestion={deleteQuestion}
     />
-  ) : (
-    <Text>No results</Text>
   );
 };
 

@@ -1,7 +1,19 @@
-import { Button, Flex } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  useToast,
+} from '@chakra-ui/react';
 import FormfieldComponent from './Formfield';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import Bugsnag from '@bugsnag/js';
+import { useState } from 'react';
+import { LoadingAnimation } from './utility/LottieAnimations';
 
 const AnswerFormComponent = ({
   answerId = '',
@@ -11,14 +23,40 @@ const AnswerFormComponent = ({
   isEdit = false,
   onModalClose,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+
   const onSubmit = async (values) => {
-    if (!isEdit) {
-      await addAnswer(values.answer);
-    } else {
-      await updateAnswer(answerId, values.answer);
-      onModalClose();
+    try {
+      setLoading(true);
+      if (!isEdit) {
+        await addAnswer(values.answer);
+      } else {
+        await updateAnswer(answerId, values.answer);
+        onModalClose();
+      }
+      formik.handleReset();
+      setLoading(false);
+      toast({
+        title: 'Success!',
+        description: isEdit
+          ? 'Answer successfully updated!'
+          : 'Successfully answered the question!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+      setLoading(false);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
-    formik.handleReset();
   };
 
   const formik = useFormik({
@@ -32,26 +70,41 @@ const AnswerFormComponent = ({
   });
 
   return (
-    <Flex direction='column' justify='center' w='100%'>
-      <FormfieldComponent
-        label='Answer'
-        placeholder='Your Answer'
-        isTextField={true}
-        error={formik.errors.answer}
-        type='text'
-        value={formik.values.answer}
-        handleChange={formik.handleChange('answer')}
-      />
-      <Button
-        m={5}
-        colorScheme='teal'
-        type='submit'
-        onClick={formik.handleSubmit}
-        isDisabled={!formik.isValid}
-      >
-        AnswerAway!
-      </Button>
-    </Flex>
+    <>
+      <Flex direction='column' justify='center' w='100%'>
+        <FormfieldComponent
+          label='Answer'
+          placeholder='Your Answer'
+          isTextField={true}
+          error={formik.errors.answer}
+          type='text'
+          value={formik.values.answer}
+          handleChange={formik.handleChange('answer')}
+        />
+        <Button
+          m={5}
+          colorScheme='teal'
+          type='submit'
+          onClick={formik.handleSubmit}
+          isDisabled={!formik.isValid}
+        >
+          AnswerAway!
+        </Button>
+      </Flex>
+      <Modal isOpen={loading}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <Flex align='center' justify='center' direction='column' m={30}>
+              <LoadingAnimation />
+              <Heading textAlign='center'>
+                {isEdit ? 'Updating your answer!' : 'Answering the question!'}
+              </Heading>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

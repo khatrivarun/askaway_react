@@ -4,6 +4,7 @@ import * as QuestionUtils from './../utils/questions';
 import * as AuthUtils from './../utils/auth';
 import { useState, useEffect } from 'react';
 import { questionsIndex, usersIndex } from '../utils/Algolia';
+import Bugsnag from '@bugsnag/js';
 
 const useSearch = (
   searchField = SearchFields.QUESTIONS,
@@ -28,7 +29,10 @@ const useSearch = (
             QuestionUtils.convertAlgoliaToQuestionObject(response.hits)
           )
           .then((data) => setQuestionResult(data))
-          .catch((error) => setError(error))
+          .catch((error) => {
+            setError(error);
+            Bugsnag.notify(error);
+          })
           .finally(() => setLoading(false));
         break;
       }
@@ -37,7 +41,10 @@ const useSearch = (
           .search(searchQueryState)
           .then((response) => AuthUtils.getUsersFromFirebase(response.hits))
           .then((data) => setUserResult(data))
-          .catch((error) => setError(error))
+          .catch((error) => {
+            setError(error);
+            Bugsnag.notify(error);
+          })
           .finally(() => setLoading(false));
         break;
       }
@@ -53,7 +60,10 @@ const useSearch = (
             QuestionUtils.convertAlgoliaToQuestionObject(response.hits)
           )
           .then((data) => setQuestionResult(data))
-          .catch((error) => setError(error))
+          .catch((error) => {
+            setError(error);
+            Bugsnag.notify(error);
+          })
           .finally(() => setLoading(false));
         break;
       }

@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/js';
 import { useEffect, useState } from 'react';
 import * as QuestionUtils from './../utils/questions';
 
@@ -10,12 +11,12 @@ const useQuestion = (id) => {
     QuestionUtils.fetchQuestion(id)
       .then((question) => {
         setQuestion(question);
-        setLoading(false);
       })
       .catch((error) => {
+        Bugsnag.notify(error);
         setError(error);
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   return { loading, question, error };

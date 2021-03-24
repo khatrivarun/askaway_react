@@ -2,7 +2,9 @@ import AnswerCardComponent from './AnswerCard';
 import * as AnswerUtils from './../utils/answers';
 import * as QuestionUtils from './../utils/questions';
 import { Answer } from '../models/answer';
-import { Heading } from '@chakra-ui/layout';
+import { Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import Bugsnag from '@bugsnag/js';
+import { NoDataAnimation } from './utility/LottieAnimations';
 
 const AnswerListComponent = ({
   selectedAnswerId,
@@ -10,6 +12,7 @@ const AnswerListComponent = ({
   answers,
   isOwnQuestion,
 }) => {
+  const toast = useToast();
   const answerList = answers.map((answer) =>
     new Answer(
       answer.id,
@@ -23,34 +26,133 @@ const AnswerListComponent = ({
     (answer) => answer.id === selectedAnswerId
   );
 
-  const deleteAnswer = async (answerId) => {
-    await AnswerUtils.deleteAnswer(answerId, questionId, answerList);
-  };
-
-  const likeAnswer = async (answerId) => {
-    await AnswerUtils.likeAnswer(answerId, questionId, answerList);
-  };
-
-  const unlikeAnswer = async (answerId) => {
-    await AnswerUtils.unlikeAnswer(answerId, questionId, answerList);
-  };
-
-  const updateAnswer = async (answerId, newAnswer) => {
-    await AnswerUtils.updateAnswer(questionId, answerId, newAnswer, answerList);
-  };
-
   const selectAsMarkedAnswer = async (answerId, userId) => {
-    if (selectedAnswerId !== '') {
+    try {
+      if (selectedAnswerId !== '') {
+        await QuestionUtils.unmarkAnswer(
+          questionId,
+          selectedAnswer.byUser.userId
+        );
+      }
+      await QuestionUtils.markAnswer(questionId, answerId, userId);
+
+      toast({
+        title: 'Success!',
+        description: 'Selected as the final answer!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const unselectAsMarkedAnswer = async () => {
+    try {
       await QuestionUtils.unmarkAnswer(
         questionId,
         selectedAnswer.byUser.userId
       );
+
+      toast({
+        title: 'Success!',
+        description: 'Unselected as the final answer!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
     }
-    await QuestionUtils.markAnswer(questionId, answerId, userId);
   };
 
-  const unselectAsMarkedAnswer = async () => {
-    await QuestionUtils.unmarkAnswer(questionId, selectedAnswer.byUser.userId);
+  const deleteAnswer = async (answerId) => {
+    try {
+      if (answerId === selectedAnswerId) await unselectAsMarkedAnswer();
+      await AnswerUtils.deleteAnswer(answerId, questionId, answerList);
+
+      toast({
+        title: 'Success!',
+        description: 'Deleted the answer!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const likeAnswer = async (answerId) => {
+    try {
+      await AnswerUtils.likeAnswer(answerId, questionId, answerList);
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const unlikeAnswer = async (answerId) => {
+    try {
+      await AnswerUtils.unlikeAnswer(answerId, questionId, answerList);
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const updateAnswer = async (answerId, newAnswer) => {
+    try {
+      await AnswerUtils.updateAnswer(
+        questionId,
+        answerId,
+        newAnswer,
+        answerList
+      );
+    } catch (error) {
+      Bugsnag.notify(error);
+      toast({
+        title: 'Error!',
+        description: 'Some error has occured! Please try again later!',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -75,23 +177,40 @@ const AnswerListComponent = ({
         </>
       )}
       <Heading>Answers</Heading>
-      {answers
-        .filter((answer) => answer.id !== selectedAnswerId)
-        .map((answer) => (
-          <AnswerCardComponent
-            key={answer.id}
-            id={answer.id}
-            user={answer.byUser}
-            answer={answer.answer}
-            likes={answer.likes}
-            updateAnswer={updateAnswer}
-            deleteAnswer={deleteAnswer}
-            isOwnQuestion={isOwnQuestion}
-            likeAnswer={likeAnswer}
-            unlikeAnswer={unlikeAnswer}
-            markAnswer={selectAsMarkedAnswer}
-          />
-        ))}
+      {answers.filter((answer) => answer.id !== selectedAnswerId).length > 0 ? (
+        answers
+          .filter((answer) => answer.id !== selectedAnswerId)
+          .map((answer) => (
+            <AnswerCardComponent
+              key={answer.id}
+              id={answer.id}
+              user={answer.byUser}
+              answer={answer.answer}
+              likes={answer.likes}
+              updateAnswer={updateAnswer}
+              deleteAnswer={deleteAnswer}
+              isOwnQuestion={isOwnQuestion}
+              likeAnswer={likeAnswer}
+              unlikeAnswer={unlikeAnswer}
+              markAnswer={selectAsMarkedAnswer}
+            />
+          ))
+      ) : (
+        <Flex
+          w={{ base: 300, md: 'md', lg: 'lg', xl: '2xl' }}
+          borderWidth='1px'
+          borderRadius='lg'
+          overflow='hidden'
+          p={30}
+          my={5}
+          direction='column'
+          justify='center'
+          align='center'
+        >
+          <NoDataAnimation />
+          <Text>No Data Found!</Text>
+        </Flex>
+      )}
     </>
   );
 };

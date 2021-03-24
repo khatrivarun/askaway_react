@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/js';
 import {
   Box,
   Button,
@@ -17,6 +18,7 @@ import {
 import { useEffect, useState } from 'react';
 import * as AuthUtils from './../utils/auth';
 import UserTileComponent from './UserTile';
+import { NoDataAnimation } from './utility/LottieAnimations';
 
 const UserCardComponent = ({ uid }) => {
   const [user, setUser] = useState(null);
@@ -42,7 +44,9 @@ const UserCardComponent = ({ uid }) => {
         setUser(userFromFirebase);
         setLoading(false);
       },
-      (error) => console.log(error)
+      (error) => {
+        Bugsnag.notify(error);
+      }
     );
   }, [uid]);
 
@@ -113,14 +117,18 @@ const UserCardComponent = ({ uid }) => {
               <Flex mt={5}>
                 <Button
                   onClick={async () => {
-                    if (
-                      user.followers
-                        .map((user) => user.userId)
-                        .indexOf(currentUser.uid) === -1
-                    ) {
-                      await AuthUtils.followUser(user.userId);
-                    } else {
-                      await AuthUtils.unfollowUser(user.userId);
+                    try {
+                      if (
+                        user.followers
+                          .map((user) => user.userId)
+                          .indexOf(currentUser.uid) === -1
+                      ) {
+                        await AuthUtils.followUser(user.userId);
+                      } else {
+                        await AuthUtils.unfollowUser(user.userId);
+                      }
+                    } catch (error) {
+                      Bugsnag.notify(error);
                     }
                   }}
                   colorScheme='teal'
@@ -150,15 +158,32 @@ const UserCardComponent = ({ uid }) => {
                 <Text>
                   {modalMode === 'following' ? 'Following' : 'Followers'}
                 </Text>
-                {modalData.map((user) => (
-                  <UserTileComponent
-                    key={user.userId}
-                    uid={user.userId}
-                    photoUrl={user.photoUrl}
-                    displayName={user.displayName}
-                    closeModal={onClose}
-                  />
-                ))}
+                {modalData.length > 0 ? (
+                  modalData.map((user) => (
+                    <UserTileComponent
+                      key={user.userId}
+                      uid={user.userId}
+                      photoUrl={user.photoUrl}
+                      displayName={user.displayName}
+                      closeModal={onClose}
+                    />
+                  ))
+                ) : (
+                  <Flex
+                    direction='column'
+                    align='center'
+                    justify='center'
+                    w='100%'
+                    borderWidth='1px'
+                    borderRadius='lg'
+                    overflow='hidden'
+                    p={3}
+                    mt={5}
+                  >
+                    <NoDataAnimation />
+                    <Text>No Data Found!</Text>
+                  </Flex>
+                )}
               </Flex>
             </ModalBody>
           </ModalContent>

@@ -1,3 +1,4 @@
+import Bugsnag from '@bugsnag/js';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import * as QuestionUtils from './../utils/questions';
@@ -20,7 +21,11 @@ const UserQuestionListWrapperComponent = ({ uid }) => {
   };
 
   const deleteQuestion = async (id) => {
-    await QuestionUtils.deleteQuestion(id);
+    try {
+      await QuestionUtils.deleteQuestion(id);
+    } catch (error) {
+      Bugsnag.notify(error);
+    }
   };
 
   return (
