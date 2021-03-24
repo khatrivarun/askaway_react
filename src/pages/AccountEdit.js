@@ -45,15 +45,11 @@ const AccountEditPage = () => {
       >
         Go back
       </Button>
-      <Tabs variant='soft-rounded' colorScheme='teal'>
+      <Tabs variant='soft-rounded' colorScheme='teal' isLazy>
         <TabList>
           <Tab>Update User Profile</Tab>
-          {!isGoogleAccount && (
-            <>
-              <Tab>Change Your Email</Tab>
-              <Tab>Change Your Password</Tab>
-            </>
-          )}
+          <Tab isDisabled={isGoogleAccount}>Change Your Email</Tab>
+          <Tab isDisabled={isGoogleAccount}>Change Your Password</Tab>
           <Tab>Delete Your Account</Tab>
         </TabList>
         <TabPanels>
