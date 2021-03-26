@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import useSearch from '../hooks/useSearch';
 import * as SearchFields from './../constants/searchFields';
-import SearchQuestionListWrapperComponent from '../components/SearchQuestionListWrapper';
+import QuestionListWrapperComponent from '../components/QuestionListWrapper';
 import UserListComponent from '../components/UserList';
 import { IoArrowBack } from 'react-icons/io5';
 import { Redirect, useHistory } from 'react-router';
@@ -101,7 +101,7 @@ const SearchResultsPage = ({ searchQuery, searchMode }) => {
               <LoadingAnimation />
             </Center>
           ) : (
-            <SearchQuestionListWrapperComponent questions={questionResult} />
+            <QuestionListWrapperComponent questions={questionResult} />
           )}
         </>
       )}

@@ -16,6 +16,7 @@ import SearchResultsPage from '../../pages/SearchResults';
 import * as SearchFields from './../../constants/searchFields';
 import _500Page from '../../pages/500';
 import _404Page from '../../pages/404';
+import CategoryQuestionsPage from '../../pages/CategoryQuestions';
 
 const Routes = () => {
   return (
@@ -69,6 +70,13 @@ const Routes = () => {
               searchQuery={props.match.params.searchQuery}
               searchMode={SearchFields.QUESTIONS}
             />
+          )}
+        />
+        <PrivateRoute
+          exact
+          path='/categories/:category'
+          render={(props) => (
+            <CategoryQuestionsPage category={props.match.params.category} />
           )}
         />
         <PublicRoute path='*' component={_404Page} />
