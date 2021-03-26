@@ -448,3 +448,6 @@ export const fetchUsersFromFirebase = async (users) => {
 
   return firebaseUsers;
 };
+
+export const fetchTopContributors = () =>
+  userDb.orderBy('answersPicked', 'desc').limit(5);

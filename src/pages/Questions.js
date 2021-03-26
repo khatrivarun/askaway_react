@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import NavBarComponent from '../components/NavBar';
 import FABComponent from '../components/FAB';
 import QuestionsFormPage from './QuestionsForm';
@@ -7,6 +7,7 @@ import * as QuestionUtils from './../utils/questions';
 import QuestionListComponent from '../components/QuestionList';
 import Bugsnag from '@bugsnag/js';
 import CategoryTilesListComponent from '../components/CategoryTilesList';
+import TopContributorsListComponent from '../components/TopContributorsList';
 
 const QuestionsPage = () => {
   const [isQuestionFormOpen, setQuestionFormOpen] = useState(false);
@@ -59,13 +60,20 @@ const QuestionsPage = () => {
       <Flex direction='column' m={5}>
         <NavBarComponent />
         <CategoryTilesListComponent />
-        <QuestionListComponent
-          questions={questions}
-          editQuestion={editQuestion}
-          deleteQuestion={deleteQuestion}
-        >
-          <FABComponent onClick={openQuestionForm} />
-        </QuestionListComponent>
+        <Flex direction={{ base: 'column', lg: 'row' }}>
+          <Box flex={{ base: 1, lg: 5 }}>
+            <QuestionListComponent
+              questions={questions}
+              editQuestion={editQuestion}
+              deleteQuestion={deleteQuestion}
+            >
+              <FABComponent onClick={openQuestionForm} />
+            </QuestionListComponent>
+          </Box>
+          <Box flex={1}>
+            <TopContributorsListComponent />
+          </Box>
+        </Flex>
       </Flex>
     </>
   ) : (
