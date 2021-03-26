@@ -189,7 +189,7 @@ const UserFormPage = () => {
               : 'New User? Register here!'}
           </Link>
           {location.pathname.startsWith('/login') && (
-            <Link>Forgot your password?</Link>
+            <Link href='/forgot'>Forgot your password?</Link>
           )}
         </Flex>
       </Box>
