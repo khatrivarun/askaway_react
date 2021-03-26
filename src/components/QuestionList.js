@@ -10,7 +10,7 @@ const QuestionListComponent = ({
   children,
 }) => {
   return (
-    <Flex direction='column' m={1} align='center' justify='center' w='100%'>
+    <Flex direction='column' align='center' justify='center' w='100%'>
       {questions.length > 0 ? (
         questions.map((question) => (
           <QuestionCardComponent
