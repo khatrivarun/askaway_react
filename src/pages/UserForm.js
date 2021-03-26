@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalOverlay,
   ModalContent,
+  Link,
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -177,6 +178,20 @@ const UserFormPage = () => {
             ? 'Register with Google'
             : 'Log in with Google'}
         </Button>
+        <Flex direction='column' align='center' justify='center'>
+          <Link
+            href={
+              location.pathname.startsWith('/register') ? '/login' : '/register'
+            }
+          >
+            {location.pathname.startsWith('/register')
+              ? 'Already have an account? Login here!'
+              : 'New User? Register here!'}
+          </Link>
+          {location.pathname.startsWith('/login') && (
+            <Link>Forgot your password?</Link>
+          )}
+        </Flex>
       </Box>
       <Modal isOpen={isOpen}>
         <ModalOverlay />
