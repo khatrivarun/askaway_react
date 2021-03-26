@@ -17,6 +17,7 @@ import * as SearchFields from './../../constants/searchFields';
 import _500Page from '../../pages/500';
 import _404Page from '../../pages/404';
 import CategoryQuestionsPage from '../../pages/CategoryQuestions';
+import ForgotPasswordPage from '../../pages/ForgotPassword';
 
 const Routes = () => {
   return (
@@ -25,6 +26,7 @@ const Routes = () => {
         <PublicRoute exact path='/' component={SplashPage} />
         <PublicRoute exact path='/register' component={UserFormPage} />
         <PublicRoute exact path='/login' component={UserFormPage} />
+        <PublicRoute exact path='/forgot' component={ForgotPasswordPage} />
         <PublicRoute exact path='/500' component={_500Page} />
         <PublicRoute exact path='/404' component={_404Page} />
         <PrivateRoute exact path='/questions' component={QuestionsPage} />
