@@ -19,7 +19,7 @@ const SplashPage = () => {
   ) : user ? (
     <Redirect to='/questions' />
   ) : (
-    <Redirect to='/login' />
+    <Redirect to='/landing' />
   );
 };
 

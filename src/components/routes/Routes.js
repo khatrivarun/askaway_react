@@ -18,12 +18,14 @@ import _500Page from '../../pages/500';
 import _404Page from '../../pages/404';
 import CategoryQuestionsPage from '../../pages/CategoryQuestions';
 import ForgotPasswordPage from '../../pages/ForgotPassword';
+import LandingPage from '../../pages/Landing';
 
 const Routes = () => {
   return (
     <Router>
       <Switch>
         <PublicRoute exact path='/' component={SplashPage} />
+        <PublicRoute exact path='/landing' component={LandingPage} />
         <PublicRoute exact path='/register' component={UserFormPage} />
         <PublicRoute exact path='/login' component={UserFormPage} />
         <PublicRoute exact path='/forgot' component={ForgotPasswordPage} />
