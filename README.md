@@ -12,6 +12,14 @@ To build and run the app on your device, do the following:
  - Create an [Algolia Project](https://www.algolia.com/) and refer [this configuration](https://github.com/khatrivarun/askaway_react/blob/dev/src/config/example.algola.js) to connect your application to Algolia.
  - Run `npm start` to start the development server on your system!
 
+# Contributing 🙌
+
+Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on how to contribute.
+
+# License ⚖
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 # Available React Scripts! 👨‍💻
 
