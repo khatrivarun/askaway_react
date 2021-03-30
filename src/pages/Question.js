@@ -1,7 +1,6 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { Redirect, useHistory } from 'react-router';
-import NavBarComponent from '../components/NavBar';
 import QuestionCardComponent from '../components/QuestionCard';
 import LoadingPage from './Loading';
 import * as QuestionUtils from './../utils/questions';
@@ -12,6 +11,7 @@ import AnswerListComponent from '../components/AnswerList';
 import AnswerFormComponent from '../components/AnswerForm';
 import { Answer } from '../models/answer';
 import Bugsnag from '@bugsnag/js';
+import { IoArrowBack } from 'react-icons/io5';
 
 const QuestionPage = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -82,7 +82,14 @@ const QuestionPage = ({ id }) => {
     </LoadingPage>
   ) : !_404 ? (
     <Flex direction='column' m={5}>
-      <NavBarComponent />
+      <Button
+        leftIcon={<IoArrowBack />}
+        colorScheme='white'
+        color='teal'
+        onClick={() => history.goBack()}
+      >
+        Go back
+      </Button>
       <Flex direction='column' align='center' justify='center'>
         <QuestionCardComponent
           key={question.id}
