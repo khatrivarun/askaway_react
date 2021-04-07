@@ -13,6 +13,7 @@ import {
   CloseButton,
   Divider,
   Button,
+  useColorMode,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdSearch } from 'react-icons/md';
@@ -22,6 +23,7 @@ const SearchBarComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchQuery, setSearchQuery] = useState('');
   const history = useHistory();
+  const { colorMode } = useColorMode();
   return (
     <>
       <Flex
@@ -36,7 +38,7 @@ const SearchBarComponent = () => {
         onClick={onOpen}
       >
         <MdSearch color='white' />
-        <Text>SearchAway</Text>
+        <Text color='white'>SearchAway</Text>
       </Flex>
       <Modal isOpen={isOpen}>
         <ModalOverlay />
@@ -58,7 +60,7 @@ const SearchBarComponent = () => {
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
                   placeholder='Search Away'
-                  textColor='white'
+                  textColor={colorMode === 'light' ? 'black' : 'white'}
                 />
               </InputGroup>
               {searchQuery !== '' && (
